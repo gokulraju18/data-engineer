@@ -3,24 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alex Ramos — Data Engineer</title>
+<title>Gokul Rengaraju — Senior Data Engineer</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #080c10;
-    --surface: #0d1117;
-    --border: #1a2332;
-    --cyan: #00e5ff;
-    --cyan-dim: #00e5ff33;
-    --amber: #ffb300;
-    --green: #39ff14;
-    --text: #c9d1d9;
-    --text-dim: #5a6a7a;
-    --text-bright: #e6edf3;
+    --bg: #06080d;
+    --surface: #0b0f17;
+    --surface2: #101620;
+    --border: #182030;
+    --azure: #0ea5e9;
+    --azure-dim: #0ea5e920;
+    --azure-glow: #0ea5e940;
+    --orange: #f97316;
+    --orange-dim: #f9731620;
+    --green: #22d3a0;
+    --text: #b0bec5;
+    --text-dim: #4a5a6a;
+    --text-bright: #e2eaf0;
+    --red: #ef4444;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -33,446 +36,308 @@
 
   /* Custom cursor */
   .cursor {
-    position: fixed;
-    width: 10px; height: 10px;
-    background: var(--cyan);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
+    position: fixed; width: 8px; height: 8px;
+    background: var(--azure); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
-    box-shadow: 0 0 12px var(--cyan);
+    box-shadow: 0 0 14px var(--azure);
+    transition: background 0.2s;
   }
   .cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid var(--cyan);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid var(--azure); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
     transform: translate(-50%, -50%);
-    transition: transform 0.15s ease, width 0.3s, height 0.3s;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
-  /* Canvas background */
-  #grid-canvas {
-    position: fixed;
-    top: 0; left: 0;
+  /* Canvas */
+  #bg-canvas {
+    position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: 0;
-    opacity: 0.35;
+    z-index: 0; opacity: 0.4;
   }
 
-  /* Layout */
   .page {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 32px;
+    position: relative; z-index: 1;
+    max-width: 1080px; margin: 0 auto;
+    padding: 0 36px;
   }
 
   /* ── HEADER ── */
-  header {
-    padding: 80px 0 60px;
-    position: relative;
-  }
+  header { padding: 72px 0 52px; }
 
-  .header-tag {
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    color: var(--cyan);
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 40px; flex-wrap: wrap; gap: 12px;
+    opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+  }
+  .sys-info { font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; }
+  .sys-info span { color: var(--azure); }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 14px; border: 1px solid var(--green);
+    font-size: 10px; color: var(--green); letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-bottom: 16px;
-    opacity: 0;
-    animation: fadeUp 0.6s ease forwards 0.2s;
   }
-
-  .header-tag::before {
-    content: '> ';
-    color: var(--text-dim);
-  }
+  .pulse { width: 6px; height: 6px; background: var(--green); border-radius: 50%;
+    animation: blink 1.8s ease-in-out infinite; }
 
   h1 {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(52px, 8vw, 96px);
-    font-weight: 800;
-    line-height: 0.9;
-    color: var(--text-bright);
-    letter-spacing: -0.03em;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.35s;
+    font-size: clamp(48px, 9vw, 100px);
+    font-weight: 800; line-height: 0.88;
+    color: var(--text-bright); letter-spacing: -0.04em;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.25s;
   }
+  h1 .last { display: block; color: var(--azure); text-shadow: 0 0 50px var(--azure-glow); }
 
-  h1 span {
-    display: block;
-    color: var(--cyan);
-    text-shadow: 0 0 40px var(--cyan-dim);
-  }
-
-  .header-sub {
-    margin-top: 28px;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 0.6s ease forwards 0.5s;
-  }
-
-  .header-sub p {
-    font-size: 13px;
-    color: var(--text-dim);
-    max-width: 440px;
-    line-height: 1.7;
-  }
-
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .contact-links a {
-    font-size: 12px;
-    color: var(--text-dim);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .contact-links a::before { content: '→'; color: var(--amber); font-size: 10px; }
-  .contact-links a:hover { color: var(--cyan); }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    border: 1px solid var(--green);
-    border-radius: 2px;
-    font-size: 11px;
-    color: var(--green);
-    letter-spacing: 0.1em;
+  .title-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 20px; padding: 8px 16px;
+    background: var(--azure-dim); border: 1px solid var(--azure);
+    font-size: 11px; letter-spacing: 0.2em; color: var(--azure);
     text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.4s;
   }
-  .status-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
+  .title-badge::before { content: '▶'; font-size: 8px; }
 
-  /* ── DIVIDER ── */
+  .header-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; margin-top: 36px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s;
+  }
+  .summary-text {
+    font-size: 12px; line-height: 1.9; color: var(--text);
+    border-left: 2px solid var(--azure); padding-left: 16px;
+  }
+  .summary-text strong { color: var(--azure); font-weight: 500; }
+
+  .contact-block {
+    display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--text-dim);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .contact-item:hover { color: var(--azure); }
+  .c-icon { color: var(--orange); font-size: 12px; width: 16px; text-align: center; }
+
   .divider {
-    height: 1px;
-    background: linear-gradient(90deg, var(--cyan) 0%, var(--border) 60%, transparent 100%);
-    margin: 8px 0 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards 0.6s;
+    height: 1px; margin: 48px 0;
+    background: linear-gradient(90deg, var(--azure) 0%, var(--border) 50%, transparent 100%);
+    opacity: 0; animation: fadeIn 1s ease forwards 0.7s;
   }
 
-  /* ── SECTION TITLES ── */
+  /* ── METRICS ── */
+  .metrics-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    margin-bottom: 64px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .metrics-bar.visible { opacity: 1; transform: translateY(0); }
+  .metric { background: var(--surface); padding: 24px 20px; text-align: center; }
+  .metric-val {
+    font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800;
+    color: var(--azure); line-height: 1; margin-bottom: 6px;
+    text-shadow: 0 0 24px var(--azure-dim);
+  }
+  .metric-lbl { font-size: 9px; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; }
+
+  /* ── SECTIONS ── */
   .section {
-    margin-bottom: 72px;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    margin-bottom: 64px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
   }
   .section.visible { opacity: 1; transform: translateY(0); }
 
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    color: var(--amber);
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .sec-label {
+    font-size: 10px; letter-spacing: 0.3em; color: var(--orange);
+    text-transform: uppercase; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
   }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* ── SKILLS GRID ── */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+  /* ── SKILLS ── */
+  .skills-categories { display: flex; flex-direction: column; gap: 12px; }
+  .skill-row {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 16px; align-items: start;
+    padding: 12px 16px;
+    background: var(--surface); border: 1px solid var(--border);
+    transition: border-color 0.3s;
   }
-
-  .skill-card {
-    background: var(--surface);
+  .skill-row:hover { border-color: var(--azure-dim); }
+  .skill-cat-name {
+    font-size: 11px; color: var(--orange); letter-spacing: 0.05em; padding-top: 1px;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stag {
+    font-size: 10px; padding: 3px 10px;
+    background: var(--azure-dim); color: var(--azure);
     border: 1px solid var(--border);
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-    transition: border-color 0.3s, transform 0.2s;
+    letter-spacing: 0.05em;
   }
-  .skill-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 100%;
-    background: var(--cyan);
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.3s ease;
-  }
-  .skill-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
-  .skill-card:hover::before { transform: scaleY(1); }
-
-  .skill-name {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-bright);
-    margin-bottom: 4px;
-  }
-  .skill-category {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
+  .stag.highlight { background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
 
   /* ── EXPERIENCE ── */
-  .exp-list { display: flex; flex-direction: column; gap: 0; }
-
+  .exp-list { display: flex; flex-direction: column; }
   .exp-item {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 32px;
-    padding: 32px 0;
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 28px; padding: 28px 0;
     border-bottom: 1px solid var(--border);
     position: relative;
   }
   .exp-item:first-child { border-top: 1px solid var(--border); }
+  .exp-item::before {
+    content: '';
+    position: absolute; left: -36px; top: 0; bottom: 0;
+    width: 2px; background: transparent;
+    transition: background 0.3s;
+  }
+  .exp-item:hover::before { background: var(--azure); }
 
-  .exp-meta { padding-top: 2px; }
-
-  .exp-period {
-    font-size: 11px;
-    color: var(--cyan);
-    letter-spacing: 0.05em;
-    margin-bottom: 6px;
-  }
-  .exp-company {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-  }
-  .exp-loc {
-    font-size: 10px;
-    color: var(--text-dim);
-    opacity: 0.6;
-  }
+  .exp-period { font-size: 10px; color: var(--azure); letter-spacing: 0.05em; margin-bottom: 5px; }
+  .exp-company { font-size: 12px; color: var(--text-dim); margin-bottom: 3px; }
+  .exp-loc { font-size: 10px; color: var(--text-dim); opacity: 0.6; }
 
   .exp-role {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-bright);
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+    color: var(--text-bright); margin-bottom: 12px; letter-spacing: -0.02em;
   }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+  .exp-bullets li {
+    font-size: 11px; line-height: 1.7; color: var(--text);
+    padding-left: 14px; position: relative;
+  }
+  .exp-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--azure); font-size: 14px; line-height: 1.3; }
+  .exp-bullets li strong { color: var(--text-bright); font-weight: 500; }
 
-  .exp-desc {
-    font-size: 12px;
-    line-height: 1.8;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-  }
-
-  .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tag {
-    font-size: 10px;
-    padding: 3px 10px;
-    background: var(--cyan-dim);
-    color: var(--cyan);
-    border: 1px solid var(--cyan);
-    letter-spacing: 0.1em;
-    border-radius: 1px;
-  }
-
-  /* ── METRICS ── */
-  .metrics-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 72px;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .metrics-row.visible { opacity: 1; transform: translateY(0); }
-
-  .metric {
-    background: var(--surface);
-    padding: 28px 24px;
-    text-align: center;
-  }
-  .metric-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--cyan);
-    line-height: 1;
-    margin-bottom: 6px;
-    text-shadow: 0 0 30px var(--cyan-dim);
-  }
-  .metric-label {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .etag {
+    font-size: 10px; padding: 2px 9px;
+    background: var(--surface2); color: var(--text-dim);
+    border: 1px solid var(--border); letter-spacing: 0.08em;
   }
 
   /* ── PROJECTS ── */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-  }
-
-  .project-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
+  .proj-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 28px; margin-bottom: 16px;
+    position: relative; overflow: hidden;
     transition: border-color 0.3s, transform 0.2s;
-    cursor: default;
   }
-  .project-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--amber));
-    transform: scaleX(0);
-    transform-origin: left;
+  .proj-card:hover { border-color: var(--azure); transform: translateX(4px); }
+  .proj-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--azure), var(--orange));
+    transform: scaleX(0); transform-origin: left;
     transition: transform 0.4s ease;
   }
-  .project-card:hover { border-color: var(--cyan-dim); transform: translateY(-3px); }
-  .project-card:hover::after { transform: scaleX(1); }
+  .proj-card:hover::before { transform: scaleX(1); }
 
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
+  .proj-name {
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+    color: var(--text-bright); margin-bottom: 8px;
   }
-  .project-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-bright);
-    letter-spacing: -0.01em;
+  .proj-tech {
+    font-size: 10px; color: var(--orange);
+    margin-bottom: 12px; letter-spacing: 0.05em;
   }
-  .project-badge {
-    font-size: 9px;
-    padding: 2px 8px;
-    color: var(--amber);
-    border: 1px solid var(--amber);
-    letter-spacing: 0.1em;
-    opacity: 0.8;
+  .proj-tech span { color: var(--text-dim); }
+  .proj-desc { font-size: 11px; line-height: 1.7; color: var(--text); margin-bottom: 14px; }
+  .proj-impacts { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .proj-impacts li {
+    font-size: 11px; line-height: 1.6; color: var(--text-dim);
+    padding-left: 14px; position: relative;
   }
-  .project-desc {
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-  }
+  .proj-impacts li::before { content: '◆'; position: absolute; left: 0; color: var(--azure); font-size: 7px; top: 4px; }
+  .proj-impacts li strong { color: var(--azure); font-weight: 500; }
 
-  /* ── EDUCATION ── */
-  .edu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  /* ── CERTIFICATIONS ── */
+  .cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .cert-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 20px 18px; transition: border-color 0.3s;
+    position: relative;
   }
+  .cert-card:hover { border-color: var(--azure); }
+  .cert-icon {
+    font-size: 20px; margin-bottom: 10px; display: block;
+  }
+  .cert-name { font-size: 12px; color: var(--text-bright); margin-bottom: 4px; line-height: 1.4; }
+  .cert-code { font-size: 10px; color: var(--azure); letter-spacing: 0.1em; }
+  .cert-verify {
+    font-size: 9px; color: var(--text-dim); margin-top: 8px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: color 0.2s;
+  }
+  .cert-verify:hover { color: var(--orange); }
+
+  /* ── BOTTOM GRID ── */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
   .edu-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px;
+    background: var(--surface); border: 1px solid var(--border); padding: 24px;
     transition: border-color 0.3s;
   }
-  .edu-card:hover { border-color: var(--amber); }
-  .edu-degree {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-bright);
-    margin-bottom: 6px;
+  .edu-card:hover { border-color: var(--orange); }
+  .edu-degree { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-bright); margin-bottom: 6px; }
+  .edu-school { font-size: 11px; color: var(--orange); margin-bottom: 4px; }
+  .edu-detail { font-size: 10px; color: var(--text-dim); }
+
+  .awards-list { display: flex; flex-direction: column; gap: 10px; }
+  .award-item {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    transition: border-color 0.3s;
   }
-  .edu-school { font-size: 12px; color: var(--amber); margin-bottom: 4px; }
-  .edu-year { font-size: 11px; color: var(--text-dim); }
+  .award-item:hover { border-color: var(--orange); }
+  .award-year { font-size: 10px; color: var(--orange); min-width: 36px; }
+  .award-name { font-size: 11px; color: var(--text-dim); }
+  .award-name strong { color: var(--text-bright); font-weight: 500; }
 
   /* ── FOOTER ── */
   footer {
-    padding: 40px 0;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
+    padding: 32px 0; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   }
-  .footer-text { font-size: 11px; color: var(--text-dim); }
-  .footer-text span { color: var(--cyan); }
-  .download-btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    padding: 10px 24px;
-    background: transparent;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background 0.2s, color 0.2s;
+  .footer-left { font-size: 10px; color: var(--text-dim); }
+  .footer-left span { color: var(--azure); }
+  .print-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; padding: 9px 22px; text-transform: uppercase;
+    background: transparent; border: 1px solid var(--azure); color: var(--azure);
+    cursor: pointer; transition: all 0.2s;
   }
-  .download-btn:hover { background: var(--cyan); color: var(--bg); }
+  .print-btn:hover { background: var(--azure); color: var(--bg); }
 
   /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.4); }
-    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(57, 255, 20, 0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: var(--azure); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 700px) {
+  @media (max-width: 720px) {
+    .header-grid, .bottom-grid { grid-template-columns: 1fr; }
     .exp-item { grid-template-columns: 1fr; gap: 8px; }
-    .metrics-row { grid-template-columns: repeat(2, 1fr); }
-    .edu-grid { grid-template-columns: 1fr; }
-    .exp-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+    .cert-grid { grid-template-columns: 1fr; }
+    .skill-row { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<canvas id="grid-canvas"></canvas>
+<canvas id="bg-canvas"></canvas>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 
@@ -480,19 +345,24 @@
 
   <!-- HEADER -->
   <header>
-    <div class="header-tag">data engineer // open to opportunities</div>
-    <h1>Alex<span>Ramos.</span></h1>
-    <div class="header-sub">
-      <p>Building high-performance data pipelines, distributed architectures, and real-time analytics platforms that power decisions at scale.</p>
-      <div class="contact-links">
-        <a href="mailto:alex.ramos@email.com">alex.ramos@email.com</a>
-        <a href="#">linkedin.com/in/alexramos</a>
-        <a href="#">github.com/alexramos</a>
-        <a href="#">São Paulo, BR · Remote</a>
+    <div class="top-bar">
+      <div class="sys-info">sys: <span>azure-databricks-env</span> // session: <span>active</span> // loc: <span>chennai.in</span></div>
+      <div class="status-pill"><span class="pulse"></span>Open to Opportunities</div>
+    </div>
+
+    <h1>Gokul<span class="last">Rengaraju.</span></h1>
+
+    <div class="title-badge">Senior Data Engineer</div>
+
+    <div class="header-grid">
+      <div class="summary-text">
+        Senior Data Engineer with <strong>4.5 years of experience</strong> designing and implementing large-scale data engineering solutions across <strong>cloud and big data ecosystems</strong>. Specialized in migrating legacy ETL platforms to <strong>Azure Databricks Lakehouse</strong>, developing <strong>PySpark pipelines</strong>, and enabling data modernization at enterprise scale. Expert in <strong>Delta Lake, Unity Catalog, ADF orchestration</strong>, and data governance with Fabric.
       </div>
-      <div class="status-badge">
-        <span class="status-dot"></span>
-        Available
+      <div class="contact-block">
+        <a class="contact-item" href="tel:+918428938681"><span class="c-icon">✆</span>+91 8428938681</a>
+        <a class="contact-item" href="mailto:gokulrengaraju2k@gmail.com"><span class="c-icon">✉</span>gokulrengaraju2k@gmail.com</a>
+        <a class="contact-item" href="https://www.linkedin.com/in/gokul-r-6ab027191" target="_blank"><span class="c-icon">in</span>linkedin.com/in/gokul-r-6ab027191</a>
+        <a class="contact-item" href="#"><span class="c-icon">◎</span>Chennai, India</a>
       </div>
     </div>
   </header>
@@ -500,100 +370,130 @@
   <div class="divider"></div>
 
   <!-- METRICS -->
-  <div class="metrics-row" id="metrics">
-    <div class="metric">
-      <div class="metric-value" data-target="6">0</div>
-      <div class="metric-label">Years Experience</div>
-    </div>
-    <div class="metric">
-      <div class="metric-value" data-target="40">0</div>
-      <div class="metric-label">TB Data Processed</div>
-    </div>
-    <div class="metric">
-      <div class="metric-value" data-target="18">0</div>
-      <div class="metric-label">Pipelines Built</div>
-    </div>
-    <div class="metric">
-      <div class="metric-value" data-target="99">0</div>
-      <div class="metric-label">% Uptime SLA</div>
-    </div>
+  <div class="metrics-bar" id="metrics">
+    <div class="metric"><div class="metric-val" data-target="4.5" data-dec="1">0</div><div class="metric-lbl">Years Experience</div></div>
+    <div class="metric"><div class="metric-val" data-target="200" data-suffix="+">0</div><div class="metric-lbl">Pipelines Migrated</div></div>
+    <div class="metric"><div class="metric-val" data-target="40" data-suffix="%">0</div><div class="metric-lbl">Perf Improvement</div></div>
+    <div class="metric"><div class="metric-val" data-target="3" data-suffix="×">0</div><div class="metric-lbl">MS Certifications</div></div>
   </div>
 
   <!-- SKILLS -->
-  <div class="section" id="skills-section">
-    <div class="section-label">// tech stack</div>
-    <div class="skills-grid">
-      <div class="skill-card"><div class="skill-name">Apache Spark</div><div class="skill-category">Batch Processing</div></div>
-      <div class="skill-card"><div class="skill-name">Apache Kafka</div><div class="skill-category">Streaming</div></div>
-      <div class="skill-card"><div class="skill-name">dbt</div><div class="skill-category">Transformation</div></div>
-      <div class="skill-card"><div class="skill-name">Apache Airflow</div><div class="skill-category">Orchestration</div></div>
-      <div class="skill-card"><div class="skill-name">Snowflake</div><div class="skill-category">Data Warehouse</div></div>
-      <div class="skill-card"><div class="skill-name">BigQuery</div><div class="skill-category">Data Warehouse</div></div>
-      <div class="skill-card"><div class="skill-name">AWS Glue / S3</div><div class="skill-category">Cloud ETL</div></div>
-      <div class="skill-card"><div class="skill-name">Terraform</div><div class="skill-category">Infrastructure</div></div>
-      <div class="skill-card"><div class="skill-name">Python</div><div class="skill-category">Core Language</div></div>
-      <div class="skill-card"><div class="skill-name">SQL (Advanced)</div><div class="skill-category">Query Language</div></div>
-      <div class="skill-card"><div class="skill-name">Delta Lake</div><div class="skill-category">Lakehouse</div></div>
-      <div class="skill-card"><div class="skill-name">Docker / K8s</div><div class="skill-category">DevOps</div></div>
+  <div class="section" id="s-skills">
+    <div class="sec-label">// skills &amp; abilities</div>
+    <div class="skills-categories">
+      <div class="skill-row">
+        <div class="skill-cat-name">Cloud Platforms</div>
+        <div class="skill-tags">
+          <span class="stag highlight">Azure</span><span class="stag highlight">Databricks</span><span class="stag">ADF</span><span class="stag">Data Lake</span><span class="stag">Microsoft Fabric</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">Big Data &amp; Lakehouse</div>
+        <div class="skill-tags">
+          <span class="stag highlight">PySpark</span><span class="stag highlight">Delta Lake</span><span class="stag">Unity Catalog</span><span class="stag">Delta Live Tables</span><span class="stag">Distributed Computing</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">Programming</div>
+        <div class="skill-tags">
+          <span class="stag highlight">Python</span><span class="stag highlight">SQL</span><span class="stag">Shell Scripting</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">ETL &amp; Orchestration</div>
+        <div class="skill-tags">
+          <span class="stag highlight">Azure Data Factory</span><span class="stag">Pentaho</span><span class="stag">Apache Airflow</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">Databases</div>
+        <div class="skill-tags">
+          <span class="stag">Azure SQL</span><span class="stag">MSSQL</span><span class="stag">MongoDB</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">Data Modeling</div>
+        <div class="skill-tags">
+          <span class="stag">Star Schema</span><span class="stag">Snowflake Schema</span><span class="stag">Dimensional Modeling</span><span class="stag">SCDs</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">DevOps &amp; Monitoring</div>
+        <div class="skill-tags">
+          <span class="stag">Git</span><span class="stag">Bitbucket</span><span class="stag">GitHub Actions</span><span class="stag">Azure Monitor</span><span class="stag">Log Analytics</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat-name">Visualization</div>
+        <div class="skill-tags">
+          <span class="stag highlight">Power BI</span>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- EXPERIENCE -->
-  <div class="section" id="exp-section">
-    <div class="section-label">// experience</div>
+  <div class="section" id="s-exp">
+    <div class="sec-label">// experience</div>
     <div class="exp-list">
 
       <div class="exp-item">
         <div class="exp-meta">
-          <div class="exp-period">2022 — Present</div>
-          <div class="exp-company">NovaTech Analytics</div>
-          <div class="exp-loc">São Paulo · Remote</div>
+          <div class="exp-period">May 2025 — Present</div>
+          <div class="exp-company">PwC India</div>
+          <div class="exp-loc">Chennai, India</div>
         </div>
-        <div class="exp-body">
-          <div class="exp-role">Senior Data Engineer</div>
-          <div class="exp-desc">Led design and implementation of a real-time streaming platform processing 5M+ events/day using Kafka + Spark Structured Streaming. Reduced pipeline latency by 70% through architectural refactoring and partitioning strategies. Mentored a team of 3 engineers and defined data quality standards adopted company-wide.</div>
-          <div class="exp-tags">
-            <span class="tag">Kafka</span>
-            <span class="tag">Spark</span>
-            <span class="tag">Airflow</span>
-            <span class="tag">BigQuery</span>
-            <span class="tag">dbt</span>
+        <div>
+          <div class="exp-role">Senior Data Engineer · Senior Associate</div>
+          <ul class="exp-bullets">
+            <li>Spearheading <strong>migration of legacy ETL ecosystems</strong> (IBM DataStage, on-prem SQL) to <strong>Databricks Lakehouse</strong>, modernizing data infrastructure for scalable analytics.</li>
+            <li>Designed and built <strong>PySpark-based ETL pipelines</strong> for ingestion, transformation, and validation of large enterprise datasets.</li>
+            <li>Created <strong>ADF pipelines</strong> to orchestrate Databricks notebooks and manage cross-layer dependencies.</li>
+            <li>Set up <strong>Unity Catalog</strong> for metadata management and data access control across domains.</li>
+            <li>Partnered with solution architects to establish <strong>best practices for Databricks development</strong> including environment setup, job optimization, and data governance.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="etag">Databricks</span><span class="etag">PySpark</span><span class="etag">ADF</span><span class="etag">Unity Catalog</span><span class="etag">IBM DataStage</span><span class="etag">Power BI</span>
           </div>
         </div>
       </div>
 
       <div class="exp-item">
         <div class="exp-meta">
-          <div class="exp-period">2020 — 2022</div>
-          <div class="exp-company">Finpass</div>
-          <div class="exp-loc">São Paulo · Hybrid</div>
+          <div class="exp-period">Nov 2021 — May 2025</div>
+          <div class="exp-company">Tata Consultancy Services</div>
+          <div class="exp-loc">Chennai, India</div>
         </div>
-        <div class="exp-body">
-          <div class="exp-role">Data Engineer</div>
-          <div class="exp-desc">Built and maintained 12+ ETL/ELT pipelines for financial reporting across 3 business units. Migrated on-premise Hadoop cluster to AWS ecosystem (S3, Glue, Redshift), cutting infrastructure costs by 45%. Implemented data lineage tracking with OpenLineage.</div>
-          <div class="exp-tags">
-            <span class="tag">AWS Glue</span>
-            <span class="tag">Redshift</span>
-            <span class="tag">Python</span>
-            <span class="tag">Terraform</span>
+        <div>
+          <div class="exp-role">Data Engineer · Systems Engineer</div>
+          <ul class="exp-bullets">
+            <li>Designed and implemented <strong>cloud-native data pipelines</strong> using Azure Data Factory and Databricks for an airline data management platform.</li>
+            <li>Migrated ETL workflows from on-prem <strong>Pentaho to ADF and Databricks</strong>, ensuring scalability and fault tolerance.</li>
+            <li>Built and optimized <strong>PySpark transformations</strong> for distributed computation and aggregation at scale.</li>
+            <li>Implemented robust <strong>error handling, monitoring, and alerting</strong> through Azure Monitor and Log Analytics.</li>
+            <li>Created <strong>Power BI dashboards</strong> integrated with Azure SQL and Fabric Lakehouse for data visualization.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="etag">Azure Data Factory</span><span class="etag">Databricks</span><span class="etag">PySpark</span><span class="etag">Delta Lake</span><span class="etag">Azure Monitor</span>
           </div>
         </div>
       </div>
 
       <div class="exp-item">
         <div class="exp-meta">
-          <div class="exp-period">2018 — 2020</div>
-          <div class="exp-company">DataBridge Consulting</div>
-          <div class="exp-loc">São Paulo · On-site</div>
+          <div class="exp-period">May 2021 — Nov 2021</div>
+          <div class="exp-company">Tata Consultancy Services</div>
+          <div class="exp-loc">Chennai, India</div>
         </div>
-        <div class="exp-body">
-          <div class="exp-role">Junior Data Engineer</div>
-          <div class="exp-desc">Developed Python-based ingestion scripts for REST APIs and flat files, loading data into PostgreSQL and Snowflake. Collaborated with analysts to model star schema data marts and document ETL workflows.</div>
-          <div class="exp-tags">
-            <span class="tag">Snowflake</span>
-            <span class="tag">Python</span>
-            <span class="tag">PostgreSQL</span>
-            <span class="tag">SQL</span>
+        <div>
+          <div class="exp-role">Data Engineer · Assistant Systems Engineer</div>
+          <ul class="exp-bullets">
+            <li>Designed and implemented <strong>ETL solutions using Pentaho Data Integration</strong>, integrating and transforming data from various sources into data marts.</li>
+            <li>Performed <strong>data validation checks</strong> and quality assessments, ensuring data integrity across complex datasets.</li>
+            <li>Performed database administration (SQL Server) including <strong>query optimization, indexing, and performance tuning</strong>, reducing execution times of key reports.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="etag">Pentaho</span><span class="etag">SQL Server</span><span class="etag">Python</span><span class="etag">Data Modeling</span>
           </div>
         </div>
       </div>
@@ -602,177 +502,189 @@
   </div>
 
   <!-- PROJECTS -->
-  <div class="section" id="proj-section">
-    <div class="section-label">// notable projects</div>
-    <div class="projects-grid">
+  <div class="section" id="s-proj">
+    <div class="sec-label">// key projects</div>
 
-      <div class="project-card">
-        <div class="project-header">
-          <div class="project-name">StreamCore</div>
-          <div class="project-badge">Open Source</div>
-        </div>
-        <div class="project-desc">End-to-end real-time ingestion framework built on Kafka + Faust. Handles schema evolution, dead-letter queues, and automatic consumer group rebalancing.</div>
-        <div class="exp-tags"><span class="tag">Python</span><span class="tag">Kafka</span><span class="tag">Faust</span></div>
-      </div>
+    <div class="proj-card">
+      <div class="proj-name">Data Platform Management &amp; Cloud Migration — Travel Domain</div>
+      <div class="proj-tech"><span>Technologies: </span>Azure Databricks · ADF · PySpark · Delta Lake · SQL · Power BI · Microsoft Fabric</div>
+      <div class="proj-desc">Led multi-phase modernization of a legacy on-prem data warehouse and ETL ecosystem into a cloud-native Azure Databricks Lakehouse architecture, enabling end-to-end data automation and advanced analytics capabilities.</div>
+      <ul class="proj-impacts">
+        <li>Migrated <strong>200+ on-prem Pentaho and DataStage pipelines</strong> to ADF + Databricks, standardizing ingestion across structured and semi-structured sources (CSV, JSON, API).</li>
+        <li>Built parameterized, modular <strong>PySpark notebooks</strong> for ingestion, transformation, and aggregation, ensuring scalability across large airline transaction datasets.</li>
+        <li>Integrated <strong>Unity Catalog</strong> for centralized governance, access control, and metadata management; implemented validation frameworks to ensure accuracy and lineage traceability.</li>
+        <li>Applied <strong>Spark tuning techniques</strong> improving transformation performance by <strong>40%</strong>.</li>
+        <li>Configured pipeline observability via <strong>Azure Monitor, Log Analytics, and Databricks metrics API</strong>, enabling proactive alerting and SLA tracking.</li>
+        <li>Modeled curated data into <strong>Star/Snowflake schemas</strong> for business-facing Power BI dashboards, enabling domain-specific KPIs and operational analytics.</li>
+      </ul>
+    </div>
 
-      <div class="project-card">
-        <div class="project-header">
-          <div class="project-name">LakehouseKit</div>
-          <div class="project-badge">Personal</div>
-        </div>
-        <div class="project-desc">CLI toolkit to bootstrap Delta Lake + dbt + Airflow environments on AWS using Terraform modules. Reduces new project setup from days to hours.</div>
-        <div class="exp-tags"><span class="tag">Terraform</span><span class="tag">Delta Lake</span><span class="tag">dbt</span></div>
-      </div>
-
-      <div class="project-card">
-        <div class="project-header">
-          <div class="project-name">QualityGuard</div>
-          <div class="project-badge">Work</div>
-        </div>
-        <div class="project-desc">Automated data quality monitoring layer with Great Expectations + Slack alerting. Catches schema drift, nullability violations, and distribution anomalies before they reach production.</div>
-        <div class="exp-tags"><span class="tag">Great Expectations</span><span class="tag">Airflow</span><span class="tag">Slack API</span></div>
-      </div>
-
+    <div class="proj-card">
+      <div class="proj-name">Databricks Implementation Support &amp; Accelerators — PwC</div>
+      <div class="proj-tech"><span>Technologies: </span>Databricks · PySpark · Delta Live Tables · ADF · Unity Catalog</div>
+      <div class="proj-desc">Contributed to multiple short-term engagements supporting Databricks implementation and migration acceleration across enterprise clients transitioning from legacy data warehouses and ETL platforms.</div>
+      <ul class="proj-impacts">
+        <li>Developed reusable <strong>Databricks accelerator frameworks</strong> for data ingestion, transformation, and auditing, enabling rapid onboarding of new clients.</li>
+        <li>Built <strong>Delta Live Tables (DLT) pipelines</strong> for declarative data transformations and monitoring lineage through built-in observability features.</li>
+        <li>Tuned PySpark jobs for performance and resource optimization, reducing <strong>compute cost per run by up to 30%</strong>.</li>
+        <li>Collaborated with CI/CD teams to integrate <strong>deployment pipelines</strong> for Databricks job promotion and configuration automation.</li>
+        <li>Enabled seamless transition for clients from legacy systems like <strong>Informatica and DataStage</strong> to Databricks Lakehouse.</li>
+      </ul>
     </div>
   </div>
 
-  <!-- EDUCATION -->
-  <div class="section" id="edu-section">
-    <div class="section-label">// education & certs</div>
-    <div class="edu-grid">
-      <div class="edu-card">
-        <div class="edu-degree">B.Sc. Computer Science</div>
-        <div class="edu-school">Universidade de São Paulo</div>
-        <div class="edu-year">2014 — 2018</div>
+  <!-- CERTIFICATIONS -->
+  <div class="section" id="s-certs">
+    <div class="sec-label">// certifications</div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <span class="cert-icon">🏅</span>
+        <div class="cert-name">Azure Data Engineer Associate</div>
+        <div class="cert-code">DP-203 · Microsoft</div>
+        <a class="cert-verify" href="#">→ verify credential</a>
       </div>
-      <div class="edu-card">
-        <div class="edu-degree">AWS Certified Data Analytics</div>
-        <div class="edu-school">Amazon Web Services</div>
-        <div class="edu-year">2023</div>
+      <div class="cert-card">
+        <span class="cert-icon">📊</span>
+        <div class="cert-name">Power BI Data Analyst Associate</div>
+        <div class="cert-code">PL-300 · Microsoft</div>
+        <a class="cert-verify" href="#">→ verify credential</a>
       </div>
-      <div class="edu-card">
-        <div class="edu-degree">dbt Analytics Engineer</div>
-        <div class="edu-school">dbt Labs</div>
-        <div class="edu-year">2022</div>
+      <div class="cert-card">
+        <span class="cert-icon">🗄️</span>
+        <div class="cert-name">Azure Database Administrator Associate</div>
+        <div class="cert-code">DP-300 · Microsoft</div>
+        <a class="cert-verify" href="#">→ verify credential</a>
       </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION + RECOGNITION -->
+  <div class="section" id="s-edu">
+    <div class="sec-label">// education &amp; recognition</div>
+    <div class="bottom-grid">
       <div class="edu-card">
-        <div class="edu-degree">Google Cloud Professional DE</div>
-        <div class="edu-school">Google Cloud</div>
-        <div class="edu-year">2021</div>
+        <div class="edu-degree">B.E. Automobile Engineering</div>
+        <div class="edu-school">PSG College of Technology</div>
+        <div class="edu-detail">Coimbatore, India · Aug 2017 – May 2021</div>
+        <div class="edu-detail" style="margin-top:6px; color: var(--azure)">CGPA: 9.14 / 10</div>
+      </div>
+      <div>
+        <div class="awards-list">
+          <div class="award-item">
+            <div class="award-year">2024</div>
+            <div class="award-name"><strong>Service &amp; Commitment Award</strong> · TCS</div>
+          </div>
+          <div class="award-item">
+            <div class="award-year">2023</div>
+            <div class="award-name"><strong>Special Initiative Award</strong> · TCS</div>
+          </div>
+          <div class="award-item">
+            <div class="award-year">2022</div>
+            <div class="award-name"><strong>Elevate Wings Award</strong> · TCS</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <footer>
-    <div class="footer-text">Last updated <span>Feb 2026</span> · Built with HTML + CSS + JS</div>
-    <button class="download-btn" onclick="window.print()">⬇ Download PDF</button>
+    <div class="footer-left">
+      Gokul Rengaraju · <span>Senior Data Engineer</span> · Chennai, India · Updated Nov 2025
+    </div>
+    <button class="print-btn" onclick="window.print()">⬇ Export PDF</button>
   </footer>
 
 </div>
 
 <script>
-  // ── Custom cursor ──
-  const cursor = document.getElementById('cursor');
+  // Custom cursor
+  const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-  function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) *.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
+  let mx=0, my=0, rx=0, ry=0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx+'px'; cur.style.top = my+'px';
+  });
+  (function animRing() {
+    rx += (mx-rx)*0.1; ry += (my-ry)*0.1;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
     requestAnimationFrame(animRing);
-  }
-  animRing();
+  })();
 
-  // ── Grid canvas ──
-  const canvas = document.getElementById('grid-canvas');
+  // Canvas background
+  const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
   let W, H;
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
 
-  // Draw animated flowing grid with particles
-  const GRID = 48;
-  const particles = Array.from({length: 60}, () => ({
-    x: Math.random() * 2000,
-    y: Math.random() * 2000,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    size: Math.random() * 2 + 0.5,
-    alpha: Math.random() * 0.5 + 0.1,
+  const GRID = 52;
+  const nodes = Array.from({length: 50}, () => ({
+    x: Math.random()*2000, y: Math.random()*2000,
+    vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+    r: Math.random()*1.5+0.5, a: Math.random()*0.4+0.1
   }));
-
   let t = 0;
-  function drawGrid() {
-    ctx.clearRect(0, 0, W, H);
-    t += 0.004;
 
-    // Grid lines
-    ctx.strokeStyle = '#1a2332';
-    ctx.lineWidth = 0.5;
-    for (let x = 0; x < W + GRID; x += GRID) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y < H + GRID; y += GRID) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    t += 0.003;
 
-    // Animated data streams (horizontal glowing lines)
-    for (let i = 0; i < 4; i++) {
-      const y = (H * 0.15 * (i + 1) + Math.sin(t + i * 1.3) * 30);
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, 'transparent');
-      grad.addColorStop(0.3 + 0.1 * Math.sin(t + i), 'rgba(0,229,255,0.15)');
-      grad.addColorStop(0.6 + 0.1 * Math.cos(t * 0.8 + i), 'rgba(255,179,0,0.08)');
-      grad.addColorStop(1, 'transparent');
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    // Grid
+    ctx.strokeStyle = '#182030'; ctx.lineWidth = 0.5;
+    for (let x = 0; x < W+GRID; x+=GRID) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (let y = 0; y < H+GRID; y+=GRID) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+    // Data stream lines (vertical)
+    for (let i=0; i<3; i++) {
+      const x = W*(0.2+0.3*i) + Math.sin(t*0.6+i)*20;
+      const grd = ctx.createLinearGradient(0,0,0,H);
+      grd.addColorStop(0,'transparent');
+      grd.addColorStop(0.4+0.1*Math.sin(t+i),'rgba(14,165,233,0.12)');
+      grd.addColorStop(1,'transparent');
+      ctx.strokeStyle=grd; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
     }
 
-    // Particles
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0,229,255,${p.alpha})`;
-      ctx.fill();
+    // Moving nodes
+    nodes.forEach(n => {
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0) n.x=W; if(n.x>W) n.x=0;
+      if(n.y<0) n.y=H; if(n.y>H) n.y=0;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(14,165,233,${n.a})`; ctx.fill();
     });
 
-    requestAnimationFrame(drawGrid);
+    requestAnimationFrame(draw);
   }
-  drawGrid();
+  draw();
 
-  // ── Intersection Observer for section reveals ──
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
+  // Intersection observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold: 0.08});
+  document.querySelectorAll('.section, .metrics-bar').forEach(el => obs.observe(el));
 
-  document.querySelectorAll('.section, .metrics-row').forEach(el => observer.observe(el));
-
-  // ── Counter animation ──
-  function animateCounters(el) {
-    el.querySelectorAll('[data-target]').forEach(counter => {
-      const target = +counter.dataset.target;
-      const suffix = counter.dataset.target === '99' ? '%' : (counter.dataset.target === '40' ? 'TB' : '');
-      let current = 0;
-      const step = target / 40;
-      const interval = setInterval(() => {
-        current = Math.min(current + step, target);
-        counter.textContent = Math.floor(current) + suffix;
-        if (current >= target) clearInterval(interval);
-      }, 30);
-    });
-  }
-
+  // Counter animation
   const metricsObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { animateCounters(e.target); metricsObs.unobserve(e.target); } });
-  }, { threshold: 0.3 });
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('[data-target]').forEach(el => {
+        const target = parseFloat(el.dataset.target);
+        const dec = el.dataset.dec ? parseInt(el.dataset.dec) : 0;
+        const suffix = el.dataset.suffix || '';
+        let current = 0; const steps = 50;
+        const step = target / steps;
+        const iv = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = (dec > 0 ? current.toFixed(dec) : Math.floor(current)) + suffix;
+          if (current >= target) clearInterval(iv);
+        }, 28);
+      });
+      metricsObs.unobserve(e.target);
+    });
+  }, {threshold: 0.3});
   metricsObs.observe(document.getElementById('metrics'));
 </script>
 </body>
