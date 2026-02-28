@@ -5,1041 +5,1505 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gokul Rengaraju — Senior Data Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-/* ─── CSS CUSTOM PROPERTIES ─────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   ROOT
+════════════════════════════════════════════════════════ */
 :root {
-  --bg:      #050812;
-  --bg2:     #080d1a;
-  --glass:   rgba(10,18,40,0.65);
-  --glass2:  rgba(14,24,52,0.5);
-  --border:  rgba(56,100,180,0.18);
-  --border2: rgba(56,100,180,0.35);
-  --azure:   #38bdf8;
-  --azure2:  #0ea5e9;
-  --teal:    #2dd4bf;
-  --violet:  #a78bfa;
-  --orange:  #fb923c;
-  --amber:   #fbbf24;
-  --text:    #94a3b8;
-  --text2:   #cbd5e1;
-  --bright:  #f0f6ff;
-  --mono:    'IBM Plex Mono', monospace;
-  --display: 'Outfit', sans-serif;
+  --ink:      #03060f;
+  --ink2:     #070d1e;
+  --panel:    #0a1228;
+  --glass:    rgba(6,14,36,0.7);
+  --rim:      rgba(99,179,237,0.12);
+  --rim2:     rgba(99,179,237,0.25);
+  --sky:      #63b3ed;
+  --sky2:     #4299e1;
+  --teal:     #4fd1c5;
+  --gold:     #f6c90e;
+  --gold2:    #e8a90a;
+  --ember:    #fc8181;
+  --sage:     #68d391;
+  --muted:    #4a5568;
+  --dim:      #718096;
+  --silver:   #a0aec0;
+  --snow:     #e2e8f0;
+  --white:    #f7fafc;
+  --mono:     'DM Mono', monospace;
+  --body:     'Cabinet Grotesk', sans-serif;
+  --display:  'Fraunces', serif;
 }
 
-/* ─── RESET & BASE ───────────────────────────────────────────────── */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--display);
-  overflow-x: hidden;
-  cursor: none;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  background:var(--ink);
+  color:var(--silver);
+  font-family:var(--body);
+  overflow-x:hidden;
+  cursor:none;
+  line-height:1.6;
+}
+a{text-decoration:none;color:inherit;}
+
+/* ════════════════════════════════════════════════════════
+   CURSOR
+════════════════════════════════════════════════════════ */
+#C,.CR{
+  position:fixed;pointer-events:none;z-index:9999;
+  border-radius:50%;transform:translate(-50%,-50%);
+}
+#C{
+  width:8px;height:8px;
+  background:var(--gold);
+  box-shadow:0 0 16px var(--gold);
+  transition:width .15s,height .15s,background .2s;
+}
+.CR{
+  width:36px;height:36px;
+  border:1.5px solid rgba(246,201,14,.35);
+  transition:width .35s cubic-bezier(.16,1,.3,1),
+             height .35s cubic-bezier(.16,1,.3,1);
+}
+body.link-hover #C{width:20px;height:20px;background:var(--teal);}
+body.link-hover .CR{width:52px;height:52px;}
+
+/* ════════════════════════════════════════════════════════
+   PROGRESS BAR
+════════════════════════════════════════════════════════ */
+#progress{
+  position:fixed;top:0;left:0;z-index:200;
+  height:2px;width:0%;
+  background:linear-gradient(90deg,var(--sky),var(--teal),var(--gold));
+  transition:width .1s linear;
+  box-shadow:0 0 8px var(--sky);
 }
 
-/* ─── CUSTOM CURSOR ──────────────────────────────────────────────── */
-#cur-dot {
-  position: fixed; z-index: 9999; pointer-events: none;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--azure); box-shadow: 0 0 20px var(--azure);
-  transform: translate(-50%,-50%);
-  transition: width .2s, height .2s, background .2s;
-}
-#cur-ring {
-  position: fixed; z-index: 9998; pointer-events: none;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1.5px solid rgba(56,189,248,0.4);
-  transform: translate(-50%,-50%);
-}
-body:has(a:hover) #cur-dot,
-body:has(button:hover) #cur-dot { width:16px; height:16px; background: var(--teal); }
-
-/* ─── AURORA BACKGROUND ──────────────────────────────────────────── */
-#aurora {
-  position: fixed; inset: 0; z-index: 0;
-  overflow: hidden; pointer-events: none;
-}
-.aurora-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.18;
-  animation: drift 18s ease-in-out infinite alternate;
-}
-.ab1 { width:600px; height:600px; background: #0369a1; top:-100px; left:-100px; animation-duration:20s; }
-.ab2 { width:500px; height:500px; background: #0d9488; top:30%; right:-100px; animation-duration:25s; animation-delay:-8s; }
-.ab3 { width:700px; height:400px; background: #1d4ed8; bottom:10%; left:20%; animation-duration:22s; animation-delay:-4s; }
-.ab4 { width:400px; height:400px; background: #6d28d9; top:60%; right:30%; animation-duration:28s; animation-delay:-12s; opacity:0.1; }
-
-@keyframes drift {
-  from { transform: translate(0,0) scale(1) rotate(0deg); }
-  to   { transform: translate(60px,40px) scale(1.15) rotate(8deg); }
+/* ════════════════════════════════════════════════════════
+   PIPELINE CANVAS
+════════════════════════════════════════════════════════ */
+#pipeline-canvas{
+  position:fixed;inset:0;z-index:0;
+  opacity:.5;pointer-events:none;
 }
 
-/* Grid overlay */
-#grid-overlay {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+/* ════════════════════════════════════════════════════════
+   FLOATING NAV
+════════════════════════════════════════════════════════ */
+#nav{
+  position:fixed;top:24px;left:50%;
+  transform:translateX(-50%);
+  z-index:100;
+  display:flex;align-items:center;gap:0;
+  background:rgba(3,6,15,.85);
+  backdrop-filter:blur(24px) saturate(200%);
+  border:1px solid var(--rim2);
+  border-radius:100px;
+  padding:6px;
+  box-shadow:0 0 0 1px rgba(99,179,237,.06),
+             0 20px 60px rgba(0,0,0,.6),
+             inset 0 1px 0 rgba(255,255,255,.04);
+  opacity:0;animation:navIn .6s ease forwards .9s;
+}
+@keyframes navIn{from{opacity:0;transform:translateX(-50%) translateY(-16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+.ni{
+  padding:7px 18px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+  color:var(--dim);cursor:pointer;
+  transition:color .25s,background .25s;
+  white-space:nowrap;
+}
+.ni:hover{color:var(--snow);}
+.ni.on{
+  background:linear-gradient(135deg,rgba(99,179,237,.18),rgba(79,209,197,.12));
+  color:var(--sky);
+  box-shadow:inset 0 0 0 1px rgba(99,179,237,.3);
 }
 
-/* Grain texture */
-#grain {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+/* ════════════════════════════════════════════════════════
+   WRAPPER
+════════════════════════════════════════════════════════ */
+.wrap{
+  position:relative;z-index:2;
+  max-width:1120px;margin:0 auto;padding:0 40px;
 }
 
-/* ─── FLOATING NAV ───────────────────────────────────────────────── */
-#nav {
-  position: fixed; top: 28px; left: 50%; transform: translateX(-50%);
-  z-index: 100;
-  display: flex; align-items: center; gap: 4px;
-  padding: 8px 14px;
-  background: rgba(8,14,32,0.8);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--border2);
-  border-radius: 100px;
-  box-shadow: 0 0 0 1px rgba(56,189,248,0.06), 0 8px 40px rgba(0,0,0,0.4);
-  opacity: 0; animation: fadeDown 0.8s ease forwards 1.2s;
+/* ════════════════════════════════════════════════════════
+   SECTION REVEAL ENGINE
+════════════════════════════════════════════════════════ */
+.R{
+  opacity:0;
+  transform:translateY(40px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1),
+             transform .9s cubic-bezier(.16,1,.3,1);
 }
-.nav-item {
-  padding: 6px 16px; border-radius: 100px; font-size: 12px; font-weight: 500;
-  color: var(--text); cursor: pointer; transition: all 0.3s; white-space: nowrap;
-  letter-spacing: 0.03em;
-}
-.nav-item:hover { color: var(--bright); }
-.nav-item.active {
-  background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(45,212,191,0.15));
-  color: var(--azure);
-  box-shadow: inset 0 0 0 1px rgba(56,189,248,0.3);
-}
-.nav-dot { width:5px; height:5px; border-radius:50%; background:var(--border2); }
+.R.in{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}
+.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
 
-/* ─── MAIN LAYOUT ────────────────────────────────────────────────── */
-main { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+/* CLIP REVEAL */
+.CR-clip{
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path 1s cubic-bezier(.16,1,.3,1);
+}
+.CR-clip.in{clip-path:inset(0 0% 0 0);}
 
-/* ─── SECTION REVEAL ─────────────────────────────────────────────── */
-.reveal {
-  opacity: 0; transform: translateY(32px);
-  transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1);
+/* ════════════════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════════════════ */
+#hero{
+  min-height:100svh;
+  display:grid;grid-template-rows:1fr auto;
+  padding:160px 0 80px;
 }
-.reveal.in { opacity: 1; transform: translateY(0); }
-.reveal-d1 { transition-delay: 0.1s; }
-.reveal-d2 { transition-delay: 0.2s; }
-.reveal-d3 { transition-delay: 0.3s; }
-.reveal-d4 { transition-delay: 0.4s; }
+.hero-inner{display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center;}
 
-/* ─── HERO ───────────────────────────────────────────────────────── */
-#hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 140px 0 80px;
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 20px;border-radius:100px;
+  background:rgba(246,201,14,.08);
+  border:1px solid rgba(246,201,14,.25);
+  font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  color:var(--gold);text-transform:uppercase;
+  margin-bottom:28px;
+  opacity:0;animation:riseUp .6s ease forwards .2s;
 }
+.kicker-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--sage);box-shadow:0 0 8px var(--sage);
+  animation:glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px var(--sage)}50%{box-shadow:0 0 20px var(--sage)}}
 
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 7px 18px;
-  background: rgba(56,189,248,0.08);
-  border: 1px solid rgba(56,189,248,0.25);
-  border-radius: 100px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
-  color: var(--azure); text-transform: uppercase;
-  margin-bottom: 32px;
-  opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
+.hero-name{
+  font-family:var(--display);
+  font-size:clamp(60px,10vw,120px);
+  font-weight:900;line-height:.88;
+  letter-spacing:-.04em;
+  opacity:0;animation:riseUp .9s ease forwards .35s;
 }
-.hero-eyebrow .live-dot {
-  width: 7px; height: 7px; background: #22c55e; border-radius: 50%;
-  box-shadow: 0 0 8px #22c55e; animation: livePulse 2s ease infinite;
+.hn-first{display:block;color:var(--white);}
+.hn-last{
+  display:block;
+  background:linear-gradient(135deg,var(--sky) 0%,var(--teal) 45%,var(--gold) 100%);
+  background-size:300% 300%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:hueShift 8s ease-in-out infinite;
 }
-@keyframes livePulse { 0%,100%{opacity:1;box-shadow:0 0 8px #22c55e} 50%{opacity:.5;box-shadow:0 0 2px #22c55e} }
+@keyframes hueShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-.hero-name {
-  font-family: var(--display);
-  font-size: clamp(64px, 11vw, 130px);
-  font-weight: 900;
-  line-height: 0.87;
-  letter-spacing: -0.04em;
-  color: var(--bright);
-  opacity: 0; animation: fadeUp 1s ease forwards 0.5s;
+.hero-role{
+  margin-top:20px;
+  font-family:var(--mono);font-size:14px;color:var(--dim);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  opacity:0;animation:riseUp .6s ease forwards .55s;
 }
-.hero-name .g-name { display: block; }
-.hero-name .g-surname {
-  display: block;
-  background: linear-gradient(135deg, var(--azure) 0%, var(--teal) 50%, var(--violet) 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% 200%;
-  animation: gradShift 6s ease-in-out infinite 1.5s;
-}
-@keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+.role-text{color:var(--teal);}
+.role-sep{color:var(--muted);}
 
-.hero-title-row {
-  display: flex; align-items: center; gap: 16px; margin-top: 24px; flex-wrap: wrap;
-  opacity: 0; animation: fadeUp 0.7s ease forwards 0.75s;
+.hero-bio{
+  margin-top:32px;
+  font-size:16px;line-height:1.85;color:var(--silver);font-weight:400;
+  max-width:560px;
+  opacity:0;animation:riseUp .7s ease forwards .7s;
 }
-.hero-title {
-  font-family: var(--mono); font-size: 15px; color: var(--text2);
-  letter-spacing: 0.05em;
-}
-.hero-title #typed-text { color: var(--azure); }
-#typed-cursor {
-  display: inline-block; width: 2px; height: 1em;
-  background: var(--azure); vertical-align: middle; margin-left: 2px;
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink { 50%{opacity:0} }
+.hero-bio strong{color:var(--sky);font-weight:700;}
 
-.hero-badge {
-  padding: 5px 14px; border-radius: 100px;
-  background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(251,191,36,0.1));
-  border: 1px solid rgba(251,146,60,0.3);
-  font-size: 12px; color: var(--orange); font-weight: 500;
+.hero-ctas{
+  margin-top:40px;display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:riseUp .6s ease forwards .85s;
 }
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 28px;border-radius:12px;
+  font-family:var(--body);font-size:14px;font-weight:700;
+  letter-spacing:.02em;cursor:pointer;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  border:none;position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn:hover::after{opacity:1;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--sky2),var(--teal));
+  color:#fff;
+  box-shadow:0 0 0 0 rgba(99,179,237,.5);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 30px rgba(99,179,237,.45),0 0 0 1px rgba(99,179,237,.3);
+}
+.btn-outline{
+  background:rgba(99,179,237,.07);
+  border:1.5px solid rgba(99,179,237,.3);
+  color:var(--sky);
+}
+.btn-outline:hover{background:rgba(99,179,237,.14);transform:translateY(-2px);}
 
-.hero-body {
-  display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 48px;
-  margin-top: 48px; align-items: start;
-  opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+/* Contact card */
+.contact-panel{
+  background:var(--glass);
+  backdrop-filter:blur(32px) saturate(180%);
+  border:1px solid var(--rim2);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 24px 80px rgba(0,0,0,.5),
+             inset 0 1px 0 rgba(255,255,255,.05);
+  opacity:0;animation:riseUp .8s ease forwards 1s;
 }
-.hero-summary {
-  font-size: 15px; line-height: 1.8; color: var(--text2); font-weight: 300;
+.cp-title{
+  font-family:var(--mono);font-size:10px;letter-spacing:.25em;
+  color:var(--muted);text-transform:uppercase;
+  margin-bottom:20px;display:flex;align-items:center;gap:8px;
 }
-.hero-summary strong { color: var(--azure); font-weight: 600; }
+.cp-title::after{content:'';flex:1;height:1px;background:var(--rim2);}
+.cl{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 14px;border-radius:12px;
+  border:1px solid transparent;
+  transition:all .25s;margin-bottom:10px;
+  text-decoration:none;color:var(--silver);font-size:13px;
+}
+.cl:last-child{margin-bottom:0;}
+.cl:hover{background:rgba(99,179,237,.07);border-color:rgba(99,179,237,.2);color:var(--sky);transform:translateX(4px);}
+.cl-ico{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+  background:rgba(99,179,237,.1);
+  border:1px solid rgba(99,179,237,.15);
+}
+.cl-info{display:flex;flex-direction:column;gap:1px;}
+.cl-label{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;}
+.cl-val{font-size:12.5px;font-weight:600;}
 
-.contact-card {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border2);
-  border-radius: 16px;
-  padding: 24px;
-  display: flex; flex-direction: column; gap: 14px;
+/* Scroll hint */
+.scroll-cue{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  margin-top:60px;padding-bottom:20px;
+  opacity:0;animation:fadeIn .8s ease forwards 1.4s;
 }
-.contact-card-title {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
-  color: var(--text); text-transform: uppercase; margin-bottom: 4px;
-  opacity: 0.6;
+.sc-track{
+  width:24px;height:40px;border:1.5px solid var(--rim2);
+  border-radius:100px;display:flex;align-items:flex-start;
+  justify-content:center;padding-top:6px;
 }
-.contact-link {
-  display: flex; align-items: center; gap: 12px;
-  text-decoration: none; color: var(--text2); font-size: 13px;
-  padding: 8px 12px; border-radius: 10px;
-  transition: all 0.25s; border: 1px solid transparent;
+.sc-ball{
+  width:6px;height:6px;border-radius:50%;background:var(--sky);
+  animation:scrollBall 2s ease-in-out infinite;
 }
-.contact-link:hover {
-  background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.2);
-  color: var(--azure); transform: translateX(4px);
-}
-.cl-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(56,189,248,0.1); font-size: 14px; flex-shrink: 0;
-}
-.cl-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@keyframes scrollBall{0%{transform:translateY(0);opacity:1}80%{transform:translateY(18px);opacity:.2}100%{transform:translateY(0);opacity:1}}
+.sc-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;}
 
-/* ─── SCROLL INDICATOR ───────────────────────────────────────────── */
-.scroll-hint {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  margin-top: 64px; opacity: 0; animation: fadeIn 1s ease forwards 1.6s;
+/* ════════════════════════════════════════════════════════
+   METRICS STRIP
+════════════════════════════════════════════════════════ */
+.metrics-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  border:1px solid var(--rim);
+  border-radius:20px;overflow:hidden;
+  margin:0 0 100px;
+  background:var(--glass);
+  backdrop-filter:blur(24px);
 }
-.scroll-line {
-  width: 1px; height: 60px;
-  background: linear-gradient(to bottom, var(--azure), transparent);
-  animation: scrollDrop 2s ease-in-out infinite;
+.ms-cell{
+  padding:28px 20px;text-align:center;
+  border-right:1px solid var(--rim);
+  position:relative;overflow:hidden;
+  transition:background .3s;cursor:default;
 }
-@keyframes scrollDrop { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.5);opacity:0.4} }
-.scroll-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; color: var(--text); opacity: 0.5; text-transform: uppercase; }
+.ms-cell:last-child{border-right:none;}
+.ms-cell::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(99,179,237,.06),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.ms-cell:hover{background:rgba(99,179,237,.04);}
+.ms-cell:hover::before{opacity:1;}
+.ms-val{
+  font-family:var(--display);font-size:40px;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--sky),var(--teal));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.ms-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
 
-/* ─── SECTION STYLES ─────────────────────────────────────────────── */
-section { padding: 80px 0; }
+/* ════════════════════════════════════════════════════════
+   SECTION HEADINGS
+════════════════════════════════════════════════════════ */
+.sec-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.25em;
+  color:var(--gold);text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+}
+.sec-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+.sec-h{
+  font-family:var(--display);
+  font-size:clamp(36px,6vw,60px);
+  font-weight:900;letter-spacing:-.03em;
+  color:var(--white);line-height:.95;margin-bottom:48px;
+}
+.sec-h em{font-style:italic;color:var(--teal);}
 
-.sec-header { margin-bottom: 48px; }
-.sec-tag {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.25em;
-  color: var(--orange); text-transform: uppercase;
-  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-}
-.sec-tag::before { content:''; width:20px; height:1px; background:var(--orange); }
-.sec-title {
-  font-size: clamp(32px, 5vw, 48px); font-weight: 800;
-  color: var(--bright); letter-spacing: -0.03em; line-height: 1;
-}
-.sec-title span { color: var(--azure); }
+section{padding:100px 0;}
 
-/* ─── STATS RIBBON ───────────────────────────────────────────────── */
-.stats-ribbon {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 2px; margin-bottom: 0; overflow: hidden; border-radius: 16px;
+/* ════════════════════════════════════════════════════════
+   SKILLS – Horizontal Scroll Track
+════════════════════════════════════════════════════════ */
+.skill-groups{display:flex;flex-direction:column;gap:14px;}
+.sg{
+  display:grid;grid-template-columns:220px 1fr;
+  gap:24px;align-items:start;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--rim);
+  border-radius:16px;
+  padding:22px 28px;
+  transition:border-color .35s,box-shadow .35s;
 }
-.stat-cell {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  padding: 28px 24px; text-align: center;
-  transition: border-color 0.3s, background 0.3s;
-  position: relative; overflow: hidden;
+.sg:hover{
+  border-color:rgba(99,179,237,.3);
+  box-shadow:0 0 0 1px rgba(99,179,237,.06),
+             inset 0 0 40px rgba(99,179,237,.03);
 }
-.stat-cell::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(56,189,248,0.05), transparent);
-  opacity: 0; transition: opacity 0.3s;
+.sg-name{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:700;color:var(--snow);
 }
-.stat-cell:hover { border-color: rgba(56,189,248,0.4); }
-.stat-cell:hover::after { opacity: 1; }
-.stat-val {
-  font-size: 44px; font-weight: 900; line-height: 1;
-  background: linear-gradient(135deg, var(--azure), var(--teal));
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
+.sg-ico{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;background:rgba(99,179,237,.1);
+  border:1px solid rgba(99,179,237,.15);flex-shrink:0;
 }
-.stat-lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; color: var(--text); text-transform: uppercase; }
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  padding:5px 14px;border-radius:100px;
+  font-size:12px;font-weight:600;letter-spacing:.02em;
+  border:1.5px solid;transition:all .25s;cursor:default;
+  white-space:nowrap;
+}
+.chip:hover{transform:translateY(-2px) scale(1.04);filter:brightness(1.15);}
+.cs{color:var(--sky);  border-color:rgba(99,179,237,.35); background:rgba(99,179,237,.07);}
+.ct{color:var(--teal); border-color:rgba(79,209,197,.35);  background:rgba(79,209,197,.07);}
+.cg{color:var(--gold); border-color:rgba(246,201,14,.35);  background:rgba(246,201,14,.07);}
+.ce{color:var(--ember);border-color:rgba(252,129,129,.35); background:rgba(252,129,129,.07);}
+.cv{color:#b794f4;     border-color:rgba(183,148,244,.35); background:rgba(183,148,244,.07);}
+.ck{color:var(--sage); border-color:rgba(104,211,145,.35); background:rgba(104,211,145,.07);}
 
-/* ─── SKILLS ─────────────────────────────────────────────────────── */
-.skills-wrap { display: flex; flex-direction: column; gap: 16px; }
-.skill-group {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 24px;
-  display: grid; grid-template-columns: 190px 1fr;
-  gap: 20px; align-items: center;
-  transition: border-color 0.35s, box-shadow 0.35s;
+/* ════════════════════════════════════════════════════════
+   MEDALLION ARCHITECTURE VISUAL
+════════════════════════════════════════════════════════ */
+.medallion-wrap{
+  margin-top:56px;
+  background:var(--glass);backdrop-filter:blur(24px);
+  border:1px solid var(--rim2);border-radius:24px;padding:36px;
 }
-.skill-group:hover {
-  border-color: rgba(56,189,248,0.35);
-  box-shadow: 0 0 0 1px rgba(56,189,248,0.06), inset 0 0 30px rgba(56,189,248,0.03);
+.med-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  color:var(--teal);text-transform:uppercase;margin-bottom:28px;
+  display:flex;align-items:center;gap:10px;
 }
-.sg-label {
-  font-size: 12px; font-weight: 600; color: var(--text2);
-  display: flex; align-items: center; gap: 8px;
+.med-title::after{content:'';flex:1;height:1px;background:var(--rim);}
+.med-layers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.med-layer{
+  border-radius:16px;padding:24px;
+  border:1px solid;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
 }
-.sg-icon { font-size: 16px; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag {
-  padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
-  border: 1px solid; letter-spacing: 0.02em; cursor: default;
-  transition: all 0.25s; white-space: nowrap;
+.med-layer:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.4);}
+.med-layer::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;border-radius:50%;
+  filter:blur(32px);opacity:.25;
 }
-.tag-azure  { color: var(--azure);  border-color: rgba(56,189,248,0.3);  background: rgba(56,189,248,0.07); }
-.tag-teal   { color: var(--teal);   border-color: rgba(45,212,191,0.3);  background: rgba(45,212,191,0.07); }
-.tag-violet { color: var(--violet); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.07);}
-.tag-orange { color: var(--orange); border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.07); }
-.tag-amber  { color: var(--amber);  border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.07); }
-.tag:hover  { transform: translateY(-2px); filter: brightness(1.2); }
+.ml-bronze{background:rgba(205,127,50,.06);border-color:rgba(205,127,50,.3);}
+.ml-bronze::before{background:#cd7f32;}
+.ml-silver{background:rgba(192,192,192,.05);border-color:rgba(192,192,192,.25);}
+.ml-silver::before{background:#c0c0c0;}
+.ml-gold  {background:rgba(246,201,14,.06);border-color:rgba(246,201,14,.25);}
+.ml-gold::before{background:var(--gold);}
+.ml-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:100px;font-family:var(--mono);
+  font-size:10px;letter-spacing:.1em;font-weight:600;margin-bottom:12px;
+  text-transform:uppercase;
+}
+.mlb-bronze{background:rgba(205,127,50,.15);color:#e8a87c;border:1px solid rgba(205,127,50,.3);}
+.mlb-silver{background:rgba(192,192,192,.12);color:#d0d0d0;border:1px solid rgba(192,192,192,.25);}
+.mlb-gold  {background:rgba(246,201,14,.12);color:var(--gold);border:1px solid rgba(246,201,14,.25);}
+.ml-layer-name{font-size:17px;font-weight:800;color:var(--white);margin-bottom:6px;letter-spacing:-.01em;}
+.ml-desc{font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:14px;}
+.ml-items{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.ml-items li{
+  font-family:var(--mono);font-size:11px;color:var(--silver);
+  padding-left:14px;position:relative;
+}
+.ml-items li::before{content:'›';position:absolute;left:0;color:var(--teal);}
 
-/* ─── EXPERIENCE TIMELINE ────────────────────────────────────────── */
-.timeline { position: relative; padding-left: 28px; }
-.timeline::before {
-  content: ''; position: absolute; left: 0; top: 12px; bottom: 12px;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--azure), rgba(56,189,248,0.1));
+.med-flow{
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;margin-top:20px;
 }
+.flow-node{
+  padding:6px 16px;border-radius:8px;
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  background:rgba(99,179,237,.08);border:1px solid rgba(99,179,237,.2);
+  color:var(--sky);
+}
+.flow-arrow{color:var(--teal);font-size:16px;animation:arrowPulse 1.5s ease-in-out infinite;}
+.flow-arrow:nth-child(3){animation-delay:.3s;}
+.flow-arrow:nth-child(5){animation-delay:.6s;}
+@keyframes arrowPulse{0%,100%{opacity:.4;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}
 
-.tl-item {
-  position: relative; margin-bottom: 0;
-  padding: 0 0 48px 40px;
+/* ════════════════════════════════════════════════════════
+   EXPERIENCE TIMELINE
+════════════════════════════════════════════════════════ */
+.tl{position:relative;padding-left:32px;}
+.tl::before{
+  content:'';position:absolute;left:0;top:16px;bottom:16px;width:1px;
+  background:linear-gradient(to bottom,var(--sky),rgba(79,209,197,.2),transparent);
 }
-.tl-item:last-child { padding-bottom: 0; }
-.tl-item::before {
-  content: ''; position: absolute; left: -5px; top: 14px;
-  width: 11px; height: 11px; border-radius: 50%;
-  background: var(--bg); border: 2px solid var(--azure);
-  box-shadow: 0 0 12px rgba(56,189,248,0.5);
-  transition: box-shadow 0.3s, background 0.3s;
+.tl-entry{
+  position:relative;padding:0 0 56px 48px;
 }
-.tl-item:hover::before {
-  background: var(--azure);
-  box-shadow: 0 0 24px rgba(56,189,248,0.8);
+.tl-entry:last-child{padding-bottom:0;}
+.tl-node{
+  position:absolute;left:-7px;top:18px;
+  width:15px;height:15px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--sky);
+  box-shadow:0 0 14px rgba(99,179,237,.5);
+  transition:background .3s,box-shadow .4s;
 }
+.tl-entry:hover .tl-node{background:var(--sky);box-shadow:0 0 28px rgba(99,179,237,.9);}
 
-.tl-card {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 32px;
-  transition: border-color 0.35s, transform 0.3s, box-shadow 0.35s;
+.tl-card{
+  background:var(--glass);backdrop-filter:blur(24px);
+  border:1px solid var(--rim);border-radius:20px;
+  padding:32px 36px;
+  transition:border-color .35s,transform .35s,box-shadow .35s;
+  position:relative;overflow:hidden;
 }
-.tl-card:hover {
-  border-color: rgba(56,189,248,0.3);
-  transform: translateX(4px);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.3), -4px 0 0 var(--azure);
+.tl-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:linear-gradient(to bottom,var(--sky),var(--teal));
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
 }
+.tl-entry:hover .tl-card{
+  border-color:rgba(99,179,237,.3);
+  transform:translateX(6px);
+  box-shadow:0 12px 48px rgba(0,0,0,.4);
+}
+.tl-entry:hover .tl-card::after{transform:scaleY(1);}
 
-.tl-meta {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+.tl-top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-wrap:wrap;gap:14px;margin-bottom:8px;
 }
-.tl-company {
-  font-size: 13px; font-weight: 700; color: var(--azure); letter-spacing: 0.02em;
+.tl-co{font-size:13px;font-weight:700;color:var(--sky);letter-spacing:.02em;}
+.tl-role{
+  font-family:var(--display);font-size:24px;font-weight:900;
+  color:var(--white);letter-spacing:-.03em;margin-top:2px;
 }
-.tl-role {
-  font-size: 20px; font-weight: 800; color: var(--bright);
-  letter-spacing: -0.02em; margin-top: 2px;
-}
-.tl-period {
-  font-family: var(--mono); font-size: 11px; color: var(--text);
-  background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15);
-  padding: 4px 12px; border-radius: 100px; white-space: nowrap;
-}
-
-.tl-bullets { list-style: none; margin: 16px 0; display: flex; flex-direction: column; gap: 9px; }
-.tl-bullets li {
-  font-size: 13.5px; line-height: 1.7; color: var(--text2); font-weight: 300;
-  padding-left: 20px; position: relative;
-}
-.tl-bullets li::before {
-  content: '▸'; position: absolute; left: 0; color: var(--teal);
-  font-size: 11px; top: 3px;
-}
-.tl-bullets li strong { color: var(--bright); font-weight: 600; }
-
-.tl-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
-.tl-tag {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
-  padding: 3px 10px; border-radius: 6px;
-  background: rgba(14,165,233,0.08); color: rgba(56,189,248,0.7);
-  border: 1px solid rgba(56,189,248,0.12);
-}
-
-/* ─── PROJECT CARDS ──────────────────────────────────────────────── */
-.projects-list { display: flex; flex-direction: column; gap: 24px; }
-.proj-card {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 0;
-  overflow: hidden;
-  transition: border-color 0.35s, box-shadow 0.35s, transform 0.3s;
-}
-.proj-card:hover {
-  border-color: rgba(56,189,248,0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
-}
-.proj-accent {
-  height: 3px;
-  background: linear-gradient(90deg, var(--azure), var(--teal), var(--violet));
-  background-size: 200%;
-  animation: gradSlide 4s linear infinite;
-}
-@keyframes gradSlide { 0%{background-position:0%} 100%{background-position:200%} }
-.proj-body { padding: 32px; }
-.proj-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
-.proj-name { font-size: 20px; font-weight: 800; color: var(--bright); letter-spacing: -0.02em; line-height: 1.2; }
-.proj-badge {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
-  padding: 5px 14px; border-radius: 100px;
-  background: rgba(45,212,191,0.1); color: var(--teal);
-  border: 1px solid rgba(45,212,191,0.3); white-space: nowrap;
-  text-transform: uppercase;
-}
-.proj-tech-line {
-  font-family: var(--mono); font-size: 11px; color: var(--text);
-  margin-bottom: 16px; line-height: 1.6;
-}
-.proj-tech-line span { color: var(--azure); }
-.proj-summary { font-size: 14px; line-height: 1.75; color: var(--text2); font-weight: 300; margin-bottom: 20px; }
-.proj-impacts {
-  list-style: none; display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.proj-impacts li {
-  font-size: 12.5px; line-height: 1.6; color: var(--text);
-  background: rgba(56,189,248,0.04); border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 14px;
-  display: flex; gap: 8px; align-items: flex-start;
-  transition: border-color 0.25s;
-}
-.proj-impacts li:hover { border-color: rgba(56,189,248,0.2); }
-.pi-icon { color: var(--azure); font-size: 12px; margin-top: 2px; flex-shrink:0; }
-.proj-impacts li strong { color: var(--azure); font-weight: 600; }
-
-/* ─── CERTIFICATIONS ─────────────────────────────────────────────── */
-.cert-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.cert-card {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border-radius: 18px;
-  padding: 28px 24px;
-  position: relative; overflow: hidden;
-  transition: transform 0.35s, box-shadow 0.35s;
-  border: 1px solid var(--border);
-}
-.cert-card::before {
-  content: ''; position: absolute; inset: -1px;
-  border-radius: 18px; z-index: -1; opacity: 0;
-  background: linear-gradient(135deg, var(--azure), var(--teal), var(--violet));
-  transition: opacity 0.4s;
-}
-.cert-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-.cert-card:hover::before { opacity: 0.6; }
-
-/* Shimmer sweep */
-.cert-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
-  background-size: 200% 100%; background-position: -100%;
-  transition: background-position 0.5s;
-}
-.cert-card:hover::after { background-position: 200%; }
-
-.cert-logo {
-  font-size: 36px; margin-bottom: 16px; display: block;
-  filter: drop-shadow(0 0 10px rgba(56,189,248,0.4));
-}
-.cert-name { font-size: 15px; font-weight: 700; color: var(--bright); margin-bottom: 6px; line-height: 1.3; }
-.cert-issuer { font-family: var(--mono); font-size: 11px; color: var(--azure); letter-spacing: 0.08em; }
-.cert-exam { font-family: var(--mono); font-size: 10px; color: var(--text); margin-top: 4px; }
-.cert-verify {
-  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
-  font-size: 11px; color: var(--orange); text-decoration: none;
-  transition: color 0.2s; font-family: var(--mono); letter-spacing: 0.05em;
-}
-.cert-verify:hover { color: var(--amber); }
-
-/* ─── BOTTOM GRID ────────────────────────────────────────────────── */
-.edu-awards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.glass-panel {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  transition: border-color 0.3s;
-}
-.glass-panel:hover { border-color: rgba(56,189,248,0.25); }
-.panel-title {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
-  color: var(--text); text-transform: uppercase; margin-bottom: 20px;
-  opacity: 0.6; border-bottom: 1px solid var(--border); padding-bottom: 12px;
-}
-.edu-degree { font-size: 17px; font-weight: 800; color: var(--bright); margin-bottom: 8px; letter-spacing: -0.02em; }
-.edu-school { font-size: 13px; color: var(--azure); margin-bottom: 4px; font-weight: 500; }
-.edu-detail { font-size: 12px; color: var(--text); }
-.edu-gpa {
-  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px;
-  padding: 6px 14px; border-radius: 100px;
-  background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(251,146,60,0.08));
-  border: 1px solid rgba(251,191,36,0.25);
-  font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--amber);
-}
-.award-item {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 14px; border-radius: 10px; margin-bottom: 8px;
-  border: 1px solid var(--border);
-  transition: border-color 0.25s, background 0.25s; cursor: default;
-}
-.award-item:last-child { margin-bottom: 0; }
-.award-item:hover {
-  border-color: rgba(251,146,60,0.3);
-  background: rgba(251,146,60,0.04);
-}
-.award-icon { font-size: 18px; }
-.award-info { flex: 1; }
-.award-name-txt { font-size: 13px; font-weight: 600; color: var(--text2); }
-.award-meta { font-family: var(--mono); font-size: 10px; color: var(--orange); margin-top: 2px; letter-spacing: 0.05em; }
-
-/* ─── FOOTER ─────────────────────────────────────────────────────── */
-footer {
-  position: relative; z-index: 2;
-  max-width: 1100px; margin: 0 auto; padding: 32px 32px 48px;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
-}
-.footer-brand { font-size: 14px; color: var(--text); }
-.footer-brand strong { color: var(--bright); font-weight: 700; }
-.footer-links { display: flex; gap: 12px; }
-.footer-btn {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 10px 22px; border-radius: 100px; cursor: pointer; transition: all 0.25s;
-  text-decoration: none;
-}
-.btn-ghost {
-  background: transparent; border: 1px solid var(--border2); color: var(--text2);
-}
-.btn-ghost:hover { border-color: var(--azure); color: var(--azure); background: rgba(56,189,248,0.06); }
-.btn-solid {
-  background: linear-gradient(135deg, var(--azure2), var(--teal));
-  border: none; color: var(--bg); font-weight: 700;
-  box-shadow: 0 0 20px rgba(56,189,248,0.3);
-}
-.btn-solid:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(56,189,248,0.4); }
-
-/* ─── ANIMATIONS ─────────────────────────────────────────────────── */
-@keyframes fadeUp   { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes fadeDown { from{opacity:0;transform:translate(-50%,-16px)} to{opacity:1;transform:translate(-50%,0)} }
-@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
-
-/* ─── SCROLLBAR ──────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--azure), var(--teal)); border-radius:4px; }
-
-/* ─── SELECTION ──────────────────────────────────────────────────── */
-::selection { background: rgba(56,189,248,0.3); color: var(--bright); }
-
-/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
-@media(max-width: 768px) {
-  #nav { display: none; }
-  .hero-body { grid-template-columns: 1fr; gap: 32px; }
-  .stats-ribbon { grid-template-columns: repeat(2,1fr); }
-  .skill-group { grid-template-columns: 1fr; }
-  .proj-impacts { grid-template-columns: 1fr; }
-  .cert-grid { grid-template-columns: 1fr; }
-  .edu-awards-grid { grid-template-columns: 1fr; }
-  .timeline { padding-left: 20px; }
-  .tl-item { padding-left: 28px; }
+.tl-period{
+  font-family:var(--mono);font-size:11px;
+  padding:5px 14px;border-radius:100px;
+  background:rgba(99,179,237,.08);
+  border:1px solid rgba(99,179,237,.18);
+  color:var(--dim);white-space:nowrap;
 }
 
-@media print {
-  #cur-dot, #cur-ring, #nav, #aurora, #grid-overlay, #grain,
-  .scroll-hint { display: none !important; }
-  body { background: white; color: black; cursor: auto; }
-  main, footer { position: static; }
-  .glass-panel, .tl-card, .stat-cell, .cert-card, .proj-card, .skill-group, .contact-card {
-    border: 1px solid #ddd; background: white; backdrop-filter: none;
+.tl-bullets{
+  list-style:none;margin:20px 0;
+  display:flex;flex-direction:column;gap:10px;
+}
+.tl-bullets li{
+  font-size:14px;line-height:1.75;
+  color:var(--silver);font-weight:400;
+  padding-left:22px;position:relative;
+}
+.tl-bullets li::before{
+  content:'▸';position:absolute;left:0;
+  color:var(--teal);font-size:12px;top:3px;
+}
+.tl-bullets li strong{color:var(--white);font-weight:700;}
+
+/* Impact pills */
+.impact-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;
+}
+.impact-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:100px;
+  font-size:12px;font-weight:600;
+  background:rgba(104,211,145,.08);
+  border:1px solid rgba(104,211,145,.25);
+  color:var(--sage);
+}
+.impact-pill svg{width:10px;height:10px;}
+
+.tl-stack{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;padding-top:16px;border-top:1px solid var(--rim);}
+.stk{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;
+  padding:4px 11px;border-radius:7px;
+  background:rgba(99,179,237,.06);color:rgba(99,179,237,.65);
+  border:1px solid rgba(99,179,237,.1);
+}
+
+/* ════════════════════════════════════════════════════════
+   PROJECT CARDS
+════════════════════════════════════════════════════════ */
+.proj-grid{display:flex;flex-direction:column;gap:28px;}
+.proj-card{
+  background:var(--glass);backdrop-filter:blur(24px);
+  border:1px solid var(--rim);border-radius:24px;
+  overflow:hidden;
+  transition:border-color .4s,transform .4s,box-shadow .4s;
+}
+.proj-card:hover{
+  border-color:rgba(99,179,237,.3);
+  transform:translateY(-6px);
+  box-shadow:0 32px 80px rgba(0,0,0,.5);
+}
+.proj-stripe{
+  height:4px;
+  background:linear-gradient(90deg,var(--sky),var(--teal),var(--gold),var(--sky));
+  background-size:300% 100%;
+  animation:stripeMove 6s linear infinite;
+}
+@keyframes stripeMove{0%{background-position:0%}100%{background-position:300%}}
+.proj-inner{padding:36px;}
+.proj-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:16px;}
+.proj-name{
+  font-family:var(--display);font-size:22px;font-weight:900;
+  color:var(--white);letter-spacing:-.03em;line-height:1.2;
+}
+.proj-badge-row{display:flex;gap:8px;flex-wrap:wrap;}
+.proj-badge{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  padding:5px 14px;border-radius:100px;
+  font-weight:600;text-transform:uppercase;white-space:nowrap;
+}
+.pb-blue{background:rgba(99,179,237,.1);color:var(--sky);border:1px solid rgba(99,179,237,.25);}
+.pb-gold{background:rgba(246,201,14,.1);color:var(--gold);border:1px solid rgba(246,201,14,.25);}
+.proj-tech{
+  font-family:var(--mono);font-size:11.5px;
+  color:var(--dim);margin-bottom:16px;line-height:1.5;
+}
+.proj-tech span{color:var(--teal);}
+.proj-summary{font-size:14px;line-height:1.8;color:var(--silver);margin-bottom:24px;}
+.proj-impacts{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.pi{
+  display:flex;gap:10px;align-items:flex-start;
+  background:rgba(99,179,237,.04);border:1px solid var(--rim);
+  border-radius:12px;padding:12px 14px;
+  transition:border-color .25s,background .25s;font-size:13px;line-height:1.6;color:var(--silver);
+}
+.pi:hover{border-color:rgba(99,179,237,.2);background:rgba(99,179,237,.06);}
+.pi-dot{color:var(--teal);font-size:12px;margin-top:2px;flex-shrink:0;}
+.pi strong{color:var(--sky);font-weight:700;}
+
+/* ════════════════════════════════════════════════════════
+   ARCHITECTURE DEEP DIVE
+════════════════════════════════════════════════════════ */
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;}
+.arch-card{
+  background:var(--glass);backdrop-filter:blur(20px);
+  border:1px solid var(--rim);border-radius:18px;padding:28px;
+  transition:border-color .3s,transform .3s;
+}
+.arch-card:hover{border-color:rgba(99,179,237,.3);transform:translateY(-3px);}
+.arch-icon{font-size:28px;margin-bottom:14px;display:block;}
+.arch-name{font-size:15px;font-weight:800;color:var(--white);margin-bottom:8px;letter-spacing:-.01em;}
+.arch-desc{font-size:13px;line-height:1.7;color:var(--silver);}
+.arch-desc strong{color:var(--teal);font-weight:600;}
+.arch-badge{
+  display:inline-flex;margin-top:12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  padding:4px 12px;border-radius:100px;
+  background:rgba(79,209,197,.08);color:var(--teal);
+  border:1px solid rgba(79,209,197,.2);text-transform:uppercase;
+}
+
+/* ════════════════════════════════════════════════════════
+   CERTS
+════════════════════════════════════════════════════════ */
+.cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.cert-card{
+  background:var(--glass);backdrop-filter:blur(24px);
+  border:1px solid var(--rim);border-radius:22px;
+  padding:30px 26px;
+  position:relative;overflow:hidden;
+  transition:border-color .4s,transform .4s,box-shadow .4s;
+}
+.cert-glow{
+  position:absolute;inset:0;border-radius:22px;
+  background:linear-gradient(135deg,rgba(99,179,237,.1),rgba(79,209,197,.06),rgba(246,201,14,.05));
+  opacity:0;transition:opacity .4s;
+}
+.cert-card:hover .cert-glow{opacity:1;}
+.cert-card:hover{
+  border-color:rgba(99,179,237,.4);
+  transform:translateY(-8px) scale(1.01);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(99,179,237,.1);
+}
+
+/* Shimmer on cert */
+.cert-card::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:60%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.06),transparent);
+  transition:left .5s ease;
+}
+.cert-card:hover::before{left:150%;}
+
+.cert-icon{font-size:36px;margin-bottom:16px;display:block;position:relative;z-index:1;}
+.cert-name{font-size:16px;font-weight:800;color:var(--white);margin-bottom:6px;line-height:1.3;position:relative;z-index:1;}
+.cert-issuer{font-family:var(--mono);font-size:11px;color:var(--sky);letter-spacing:.08em;position:relative;z-index:1;}
+.cert-exam{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;position:relative;z-index:1;}
+.cert-link{
+  display:inline-flex;align-items:center;gap:6px;margin-top:16px;
+  font-family:var(--mono);font-size:11px;color:var(--gold);
+  letter-spacing:.05em;transition:color .2s;position:relative;z-index:1;
+}
+.cert-link:hover{color:var(--gold2);}
+
+/* ════════════════════════════════════════════════════════
+   EDUCATION + AWARDS
+════════════════════════════════════════════════════════ */
+.ea-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.ea-panel{
+  background:var(--glass);backdrop-filter:blur(24px);
+  border:1px solid var(--rim);border-radius:22px;padding:32px;
+  transition:border-color .3s;
+}
+.ea-panel:hover{border-color:rgba(99,179,237,.25);}
+.panel-hdr{
+  font-family:var(--mono);font-size:10px;letter-spacing:.25em;
+  color:var(--muted);text-transform:uppercase;
+  margin-bottom:20px;padding-bottom:14px;
+  border-bottom:1px solid var(--rim);
+  display:flex;align-items:center;gap:8px;
+}
+.edu-deg{
+  font-family:var(--display);font-size:20px;font-weight:900;
+  color:var(--white);letter-spacing:-.02em;margin-bottom:8px;
+}
+.edu-school{font-size:13px;color:var(--sky);font-weight:600;margin-bottom:4px;}
+.edu-detail{font-size:12px;color:var(--dim);}
+.edu-gpa{
+  display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+  padding:8px 18px;border-radius:100px;font-family:var(--mono);
+  font-size:14px;font-weight:700;
+  background:rgba(246,201,14,.1);color:var(--gold);
+  border:1px solid rgba(246,201,14,.25);
+  box-shadow:0 0 20px rgba(246,201,14,.1);
+}
+.award{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-radius:12px;
+  border:1px solid var(--rim);margin-bottom:10px;
+  transition:border-color .25s,background .25s;cursor:default;
+}
+.award:last-child{margin-bottom:0;}
+.award:hover{border-color:rgba(246,201,14,.3);background:rgba(246,201,14,.04);}
+.award-ico{font-size:20px;}
+.award-name{font-size:13px;font-weight:700;color:var(--snow);}
+.award-sub{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.06em;margin-top:2px;}
+
+/* ════════════════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════════════════ */
+footer{
+  position:relative;z-index:2;
+  border-top:1px solid var(--rim);
+  padding:36px 40px 48px;
+  max-width:1120px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-name{
+  font-family:var(--display);font-size:18px;font-weight:900;
+  color:var(--white);letter-spacing:-.02em;
+}
+.footer-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.footer-ctas{display:flex;gap:12px;align-items:center;}
+
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════════════════════════ */
+@keyframes riseUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ════════════════════════════════════════════════════════
+   SCROLLBAR
+════════════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--ink);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--sky),var(--teal));border-radius:4px;}
+::selection{background:rgba(99,179,237,.25);color:var(--white);}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .contact-panel{max-width:400px;}
+  .metrics-strip{grid-template-columns:repeat(3,1fr);}
+  .med-layers{grid-template-columns:1fr;}
+  .proj-impacts{grid-template-columns:1fr;}
+  .arch-grid{grid-template-columns:1fr;}
+  .cert-grid{grid-template-columns:1fr;}
+  .ea-grid{grid-template-columns:1fr;}
+  .sg{grid-template-columns:1fr;}
+  #nav{display:none;}
+  .wrap{padding:0 20px;}
+  footer{padding:28px 20px 40px;}
+}
+@media(max-width:600px){
+  .metrics-strip{grid-template-columns:repeat(2,1fr);}
+}
+
+@media print{
+  #pipeline-canvas,#C,.CR,#nav,#progress,.scroll-cue{display:none!important;}
+  body{background:white;color:#111;cursor:auto;}
+  .wrap,footer{position:static;}
+  .glass,.tl-card,.sg,.proj-card,.cert-card,.ea-panel,.arch-card,.ms-cell,.medallion-wrap,.med-layer{
+    background:white!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;
   }
-  section { page-break-inside: avoid; }
+  .hn-last,.ms-val,.sec-h em{-webkit-text-fill-color:var(--sky)!important;}
+  section{page-break-inside:avoid;padding:40px 0;}
 }
 </style>
 </head>
 <body>
 
-<!-- ─── BG LAYERS ──────────────────────────── -->
-<div id="aurora">
-  <div class="aurora-blob ab1"></div>
-  <div class="aurora-blob ab2"></div>
-  <div class="aurora-blob ab3"></div>
-  <div class="aurora-blob ab4"></div>
-</div>
-<div id="grid-overlay"></div>
-<div id="grain"></div>
+<!-- Progress bar -->
+<div id="progress"></div>
 
-<!-- ─── CURSOR ────────────────────────────── -->
-<div id="cur-dot"></div>
-<div id="cur-ring"></div>
+<!-- Pipeline canvas bg -->
+<canvas id="pipeline-canvas"></canvas>
 
-<!-- ─── FLOATING NAV ──────────────────────── -->
+<!-- Cursor -->
+<div id="C"></div>
+<div class="CR" id="CR"></div>
+
+<!-- ─── FLOATING NAV ─────────────────────── -->
 <nav id="nav">
-  <span class="nav-item active" data-section="hero">Home</span>
-  <div class="nav-dot"></div>
-  <span class="nav-item" data-section="skills">Skills</span>
-  <div class="nav-dot"></div>
-  <span class="nav-item" data-section="experience">Experience</span>
-  <div class="nav-dot"></div>
-  <span class="nav-item" data-section="projects">Projects</span>
-  <div class="nav-dot"></div>
-  <span class="nav-item" data-section="certs">Certs</span>
+  <span class="ni on" data-s="hero">Home</span>
+  <span class="ni" data-s="skills">Skills</span>
+  <span class="ni" data-s="experience">Experience</span>
+  <span class="ni" data-s="projects">Projects</span>
+  <span class="ni" data-s="architecture">Architecture</span>
+  <span class="ni" data-s="certs">Certs</span>
 </nav>
 
-<!-- ─── MAIN ───────────────────────────────── -->
-<main>
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<div class="wrap">
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-kicker">
+        <span class="kicker-dot"></span>
+        Available for Senior / Lead Roles
+      </div>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-eyebrow">
-      <span class="live-dot"></span>
-      Senior Data Engineer · Chennai, India
-    </div>
+      <h1 class="hero-name">
+        <span class="hn-first">Gokul</span>
+        <span class="hn-last">Rengaraju.</span>
+      </h1>
 
-    <h1 class="hero-name">
-      <span class="g-name">Gokul</span>
-      <span class="g-surname">Rengaraju.</span>
-    </h1>
+      <div class="hero-role">
+        <span class="role-text" id="typed-text">azure_data_engineer</span>
+        <span id="tcur">▌</span>
+        <span class="role-sep">·</span>
+        <span>4.5 yrs</span>
+        <span class="role-sep">·</span>
+        <span>Chennai, IN</span>
+      </div>
 
-    <div class="hero-title-row">
-      <span class="hero-title">/<span id="typed-text"></span><span id="typed-cursor"></span></span>
-      <span class="hero-badge">4.5 yrs experience</span>
-    </div>
-
-    <div class="hero-body">
-      <p class="hero-summary">
-        Senior Data Engineer with <strong>4.5 years of experience</strong> designing and implementing large-scale data solutions across cloud and big data ecosystems. Specialized in migrating legacy ETL platforms to <strong>Azure Databricks Lakehouse</strong>, developing <strong>PySpark pipelines</strong>, and enabling data modernization at enterprise scale. Expert in <strong>Delta Lake architecture, Unity Catalog governance</strong>, and high-performance pipeline engineering that empowers analytics and business intelligence at scale.
+      <p class="hero-bio">
+        Senior Data Engineer specializing in <strong>Azure Databricks Lakehouse</strong> modernization, <strong>medallion architecture</strong> design, and enterprise-scale ETL migration. Expert in <strong>PySpark optimization, Delta Lake governance</strong>, and building observable, cost-efficient data platforms that power real-time analytics and business intelligence at scale.
       </p>
 
-      <div class="contact-card">
-        <div class="contact-card-title">// contact</div>
-        <a class="contact-link" href="tel:+918428938681">
-          <div class="cl-icon">📞</div>
-          <span class="cl-text">+91 8428938681</span>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="mailto:gokulrengaraju2k@gmail.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact Me
         </a>
-        <a class="contact-link" href="mailto:gokulrengaraju2k@gmail.com">
-          <div class="cl-icon">✉️</div>
-          <span class="cl-text">gokulrengaraju2k@gmail.com</span>
-        </a>
-        <a class="contact-link" href="https://www.linkedin.com/in/gokul-r-6ab027191" target="_blank">
-          <div class="cl-icon">💼</div>
-          <span class="cl-text">linkedin.com/in/gokul-r</span>
-        </a>
+        <button class="btn btn-outline" onclick="window.print()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </button>
       </div>
     </div>
 
-    <div class="scroll-hint">
-      <div class="scroll-line"></div>
-      <span class="scroll-label">scroll to explore</span>
+    <div class="contact-panel">
+      <div class="cp-title">// contact</div>
+      <a class="cl" href="tel:+918428938681">
+        <div class="cl-ico">📞</div>
+        <div class="cl-info">
+          <span class="cl-label">Phone</span>
+          <span class="cl-val">+91 8428938681</span>
+        </div>
+      </a>
+      <a class="cl" href="mailto:gokulrengaraju2k@gmail.com">
+        <div class="cl-ico">✉️</div>
+        <div class="cl-info">
+          <span class="cl-label">Email</span>
+          <span class="cl-val">gokulrengaraju2k@gmail.com</span>
+        </div>
+      </a>
+      <a class="cl" href="https://www.linkedin.com/in/gokul-r-6ab027191" target="_blank">
+        <div class="cl-ico">💼</div>
+        <div class="cl-info">
+          <span class="cl-label">LinkedIn</span>
+          <span class="cl-val">gokul-r-6ab027191</span>
+        </div>
+      </a>
+      <a class="cl" href="#">
+        <div class="cl-ico">📍</div>
+        <div class="cl-info">
+          <span class="cl-label">Location</span>
+          <span class="cl-val">Chennai, Tamil Nadu, India</span>
+        </div>
+      </a>
     </div>
-  </section>
-
-  <!-- STATS -->
-  <div class="stats-ribbon reveal" id="stats">
-    <div class="stat-cell"><div class="stat-val" data-to="4.5" data-dec="1">0</div><div class="stat-lbl">Years Experience</div></div>
-    <div class="stat-cell"><div class="stat-val" data-to="200" data-suffix="+">0</div><div class="stat-lbl">Pipelines Migrated</div></div>
-    <div class="stat-cell"><div class="stat-val" data-to="40" data-suffix="%">0</div><div class="stat-lbl">Performance Boost</div></div>
-    <div class="stat-cell"><div class="stat-val" data-to="3" data-suffix="×">0</div><div class="stat-lbl">MS Certifications</div></div>
   </div>
 
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="sec-header reveal">
-      <div class="sec-tag">01 — Expertise</div>
-      <h2 class="sec-title">Skills &amp; <span>Stack</span></h2>
-    </div>
-    <div class="skills-wrap">
-      <div class="skill-group reveal reveal-d1">
-        <div class="sg-label"><span class="sg-icon">☁️</span>Cloud Platforms</div>
-        <div class="tags">
-          <span class="tag tag-azure">Azure</span>
-          <span class="tag tag-azure">Databricks</span>
-          <span class="tag tag-azure">Azure Data Factory</span>
-          <span class="tag tag-azure">Data Lake</span>
-          <span class="tag tag-azure">Microsoft Fabric</span>
-        </div>
-      </div>
-      <div class="skill-group reveal reveal-d2">
-        <div class="sg-label"><span class="sg-icon">⚡</span>Big Data &amp; Lakehouse</div>
-        <div class="tags">
-          <span class="tag tag-teal">PySpark</span>
-          <span class="tag tag-teal">Delta Lake</span>
-          <span class="tag tag-teal">Delta Live Tables</span>
-          <span class="tag tag-teal">Unity Catalog</span>
-          <span class="tag tag-teal">Distributed Computing</span>
-        </div>
-      </div>
-      <div class="skill-group reveal reveal-d3">
-        <div class="sg-label"><span class="sg-icon">💻</span>Programming</div>
-        <div class="tags">
-          <span class="tag tag-violet">Python</span>
-          <span class="tag tag-violet">SQL (Advanced)</span>
-          <span class="tag tag-violet">Shell Scripting</span>
-        </div>
-      </div>
-      <div class="skill-group reveal reveal-d1">
-        <div class="sg-label"><span class="sg-icon">🔄</span>ETL &amp; Orchestration</div>
-        <div class="tags">
-          <span class="tag tag-orange">Azure Data Factory</span>
-          <span class="tag tag-orange">Apache Airflow</span>
-          <span class="tag tag-orange">Pentaho</span>
-          <span class="tag tag-orange">IBM DataStage</span>
-        </div>
-      </div>
-      <div class="skill-group reveal reveal-d2">
-        <div class="sg-label"><span class="sg-icon">🗄️</span>Databases &amp; Modeling</div>
-        <div class="tags">
-          <span class="tag tag-amber">Azure SQL</span>
-          <span class="tag tag-amber">MSSQL</span>
-          <span class="tag tag-amber">MongoDB</span>
-          <span class="tag tag-amber">Star Schema</span>
-          <span class="tag tag-amber">Snowflake Schema</span>
-          <span class="tag tag-amber">SCDs</span>
-        </div>
-      </div>
-      <div class="skill-group reveal reveal-d3">
-        <div class="sg-label"><span class="sg-icon">🛠️</span>DevOps &amp; Monitoring</div>
-        <div class="tags">
-          <span class="tag tag-teal">Git</span>
-          <span class="tag tag-teal">GitHub Actions</span>
-          <span class="tag tag-teal">Bitbucket</span>
-          <span class="tag tag-teal">Azure Monitor</span>
-          <span class="tag tag-teal">Log Analytics</span>
-          <span class="tag tag-teal">Power BI</span>
-        </div>
+  <div class="scroll-cue">
+    <div class="sc-track"><div class="sc-ball"></div></div>
+    <span class="sc-lbl">scroll</span>
+  </div>
+</section>
+
+<!-- METRICS -->
+<div class="metrics-strip R" id="metrics-strip">
+  <div class="ms-cell"><div class="ms-val" data-to="4.5" data-dec="1">0</div><div class="ms-lbl">Years XP</div></div>
+  <div class="ms-cell"><div class="ms-val" data-to="200" data-suf="+">0</div><div class="ms-lbl">Pipelines Migrated</div></div>
+  <div class="ms-cell"><div class="ms-val" data-to="40" data-suf="%">0</div><div class="ms-lbl">Perf Boost</div></div>
+  <div class="ms-cell"><div class="ms-val" data-to="30" data-suf="%">0</div><div class="ms-lbl">Cost Reduction</div></div>
+  <div class="ms-cell"><div class="ms-val" data-to="3">0</div><div class="ms-lbl">MS Certifications</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SKILLS
+════════════════════════════════════════ -->
+<section id="skills">
+  <div class="sec-eyebrow R">01 — Expertise</div>
+  <h2 class="sec-h R">Technical <em>Stack</em></h2>
+
+  <div class="skill-groups">
+    <div class="sg R d1">
+      <div class="sg-name"><div class="sg-ico">☁️</div>Cloud & Lakehouse</div>
+      <div class="chips">
+        <span class="chip cs">Azure Databricks</span>
+        <span class="chip cs">Azure Data Factory</span>
+        <span class="chip cs">Azure Data Lake Gen2</span>
+        <span class="chip cs">Microsoft Fabric</span>
+        <span class="chip cs">Azure Synapse</span>
+        <span class="chip cs">Azure SQL</span>
       </div>
     </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <div class="sec-header reveal">
-      <div class="sec-tag">02 — Career</div>
-      <h2 class="sec-title">Work <span>Experience</span></h2>
-    </div>
-    <div class="timeline">
-
-      <div class="tl-item reveal reveal-d1">
-        <div class="tl-card">
-          <div class="tl-meta">
-            <div>
-              <div class="tl-company">PwC India · Senior Associate</div>
-              <div class="tl-role">Senior Data Engineer</div>
-            </div>
-            <div class="tl-period">May 2025 — Present</div>
-          </div>
-          <ul class="tl-bullets">
-            <li>Spearheading <strong>migration of legacy ETL ecosystems</strong> (IBM DataStage, on-prem SQL workflows) to <strong>Databricks Lakehouse</strong>, modernizing data infrastructure and enabling scalable analytics.</li>
-            <li>Designed and built <strong>PySpark-based ETL pipelines</strong> for ingestion, transformation, and validation of large enterprise datasets.</li>
-            <li>Created <strong>ADF pipelines</strong> to orchestrate Databricks notebooks and manage dependencies across multiple layers of data processing.</li>
-            <li>Set up <strong>Unity Catalog</strong> for metadata management and data access control across domains.</li>
-            <li>Partnered with solution architects to establish <strong>best practices for Databricks development</strong>, including environment setup, job optimization, and data governance.</li>
-          </ul>
-          <div class="tl-tags">
-            <span class="tl-tag">Databricks</span><span class="tl-tag">PySpark</span><span class="tl-tag">ADF</span>
-            <span class="tl-tag">Unity Catalog</span><span class="tl-tag">IBM DataStage</span><span class="tl-tag">Power BI</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item reveal reveal-d2">
-        <div class="tl-card">
-          <div class="tl-meta">
-            <div>
-              <div class="tl-company">Tata Consultancy Services · Systems Engineer</div>
-              <div class="tl-role">Data Engineer</div>
-            </div>
-            <div class="tl-period">Nov 2021 — May 2025</div>
-          </div>
-          <ul class="tl-bullets">
-            <li>Designed and implemented <strong>cloud-native data pipelines</strong> using Azure Data Factory and Databricks for an airline data management platform.</li>
-            <li>Migrated ETL workflows from on-prem <strong>Pentaho to ADF and Databricks</strong>, ensuring scalability and fault tolerance.</li>
-            <li>Built and optimized <strong>PySpark transformations</strong> for distributed computation and aggregation.</li>
-            <li>Implemented robust <strong>error handling, monitoring, and alerting</strong> via Azure Monitor and Log Analytics.</li>
-            <li>Created <strong>Power BI dashboards</strong> integrated with Azure SQL and Fabric Lakehouse for data visualization.</li>
-          </ul>
-          <div class="tl-tags">
-            <span class="tl-tag">Azure Data Factory</span><span class="tl-tag">Databricks</span><span class="tl-tag">PySpark</span>
-            <span class="tl-tag">Delta Lake</span><span class="tl-tag">Azure Monitor</span><span class="tl-tag">Power BI</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item reveal reveal-d3">
-        <div class="tl-card">
-          <div class="tl-meta">
-            <div>
-              <div class="tl-company">Tata Consultancy Services · Asst. Systems Engineer</div>
-              <div class="tl-role">Data Engineer (Junior)</div>
-            </div>
-            <div class="tl-period">May 2021 — Nov 2021</div>
-          </div>
-          <ul class="tl-bullets">
-            <li>Designed and implemented <strong>ETL solutions using Pentaho Data Integration</strong>, transforming data from various sources into data marts and warehouses.</li>
-            <li>Performed <strong>data validation checks and quality assessments</strong>, ensuring data integrity across complex datasets.</li>
-            <li>Database administration (SQL Server) including <strong>query optimization, indexing, and performance tuning</strong>, reducing execution times of key reports and queries.</li>
-          </ul>
-          <div class="tl-tags">
-            <span class="tl-tag">Pentaho</span><span class="tl-tag">SQL Server</span><span class="tl-tag">Python</span><span class="tl-tag">Data Modeling</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="sec-header reveal">
-      <div class="sec-tag">03 — Work</div>
-      <h2 class="sec-title">Key <span>Projects</span></h2>
-    </div>
-    <div class="projects-list">
-
-      <div class="proj-card reveal reveal-d1">
-        <div class="proj-accent"></div>
-        <div class="proj-body">
-          <div class="proj-header">
-            <div class="proj-name">Data Platform Migration &amp; Cloud Modernization<br>— Travel Domain</div>
-            <span class="proj-badge">TCS · Enterprise</span>
-          </div>
-          <div class="proj-tech-line"><span>Stack:</span> Azure Databricks · ADF · PySpark · Delta Lake · SQL · Power BI · Microsoft Fabric</div>
-          <p class="proj-summary">Led multi-phase modernization of a legacy on-prem data warehouse and ETL ecosystem into a cloud-native Azure Databricks Lakehouse architecture, enabling end-to-end data automation and advanced analytics at enterprise scale.</p>
-          <ul class="proj-impacts">
-            <li><span class="pi-icon">▸</span><span>Migrated <strong>200+ on-prem Pentaho and DataStage pipelines</strong> to ADF + Databricks, standardizing ingestion across CSV, JSON, and API sources.</span></li>
-            <li><span class="pi-icon">▸</span><span>Built parameterized, modular <strong>PySpark notebooks</strong> ensuring scalability across large airline transaction datasets.</span></li>
-            <li><span class="pi-icon">▸</span><span>Applied <strong>Spark tuning techniques</strong> improving transformation performance by <strong>40%</strong>.</span></li>
-            <li><span class="pi-icon">▸</span><span>Integrated <strong>Unity Catalog</strong> for governance, access control, metadata management, and lineage traceability.</span></li>
-            <li><span class="pi-icon">▸</span><span>Configured observability via <strong>Azure Monitor, Log Analytics, and Databricks metrics API</strong> for proactive SLA tracking.</span></li>
-            <li><span class="pi-icon">▸</span><span>Modeled curated data into <strong>Star/Snowflake schemas</strong> for Power BI dashboards enabling domain-specific KPIs.</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="proj-card reveal reveal-d2">
-        <div class="proj-accent"></div>
-        <div class="proj-body">
-          <div class="proj-header">
-            <div class="proj-name">Databricks Implementation Support &amp; Accelerators — PwC</div>
-            <span class="proj-badge">PwC · Multi-client</span>
-          </div>
-          <div class="proj-tech-line"><span>Stack:</span> Databricks · PySpark · Delta Live Tables · ADF · Unity Catalog</div>
-          <p class="proj-summary">Contributed to multiple short-term engagements supporting Databricks implementation and migration acceleration across enterprise clients transitioning from legacy data warehouses and ETL platforms like Informatica and DataStage.</p>
-          <ul class="proj-impacts">
-            <li><span class="pi-icon">▸</span><span>Developed reusable <strong>Databricks accelerator frameworks</strong> for ingestion, transformation, and auditing, enabling rapid client onboarding.</span></li>
-            <li><span class="pi-icon">▸</span><span>Built <strong>Delta Live Tables (DLT) pipelines</strong> for declarative transformations with built-in lineage observability.</span></li>
-            <li><span class="pi-icon">▸</span><span>Tuned PySpark jobs reducing <strong>compute cost per run by up to 30%</strong>.</span></li>
-            <li><span class="pi-icon">▸</span><span>Integrated <strong>CI/CD deployment pipelines</strong> for Databricks job promotion and configuration automation across environments.</span></li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CERTIFICATIONS -->
-  <section id="certs">
-    <div class="sec-header reveal">
-      <div class="sec-tag">04 — Credentials</div>
-      <h2 class="sec-title">Certifi<span>cations</span></h2>
-    </div>
-    <div class="cert-grid">
-      <div class="cert-card reveal reveal-d1">
-        <span class="cert-logo">🏅</span>
-        <div class="cert-name">Azure Data Engineer Associate</div>
-        <div class="cert-issuer">Microsoft Certified</div>
-        <div class="cert-exam">Exam DP-203</div>
-        <a class="cert-verify" href="#">↗ Verify credential</a>
-      </div>
-      <div class="cert-card reveal reveal-d2">
-        <span class="cert-logo">📊</span>
-        <div class="cert-name">Power BI Data Analyst Associate</div>
-        <div class="cert-issuer">Microsoft Certified</div>
-        <div class="cert-exam">Exam PL-300</div>
-        <a class="cert-verify" href="#">↗ Verify credential</a>
-      </div>
-      <div class="cert-card reveal reveal-d3">
-        <span class="cert-logo">🗄️</span>
-        <div class="cert-name">Azure Database Administrator Associate</div>
-        <div class="cert-issuer">Microsoft Certified</div>
-        <div class="cert-exam">Exam DP-300</div>
-        <a class="cert-verify" href="#">↗ Verify credential</a>
+    <div class="sg R d2">
+      <div class="sg-name"><div class="sg-ico">⚡</div>Big Data & Processing</div>
+      <div class="chips">
+        <span class="chip ct">PySpark</span>
+        <span class="chip ct">Delta Lake</span>
+        <span class="chip ct">Delta Live Tables (DLT)</span>
+        <span class="chip ct">Structured Streaming</span>
+        <span class="chip ct">Auto Loader</span>
+        <span class="chip ct">Unity Catalog</span>
+        <span class="chip ct">Databricks Workflows</span>
       </div>
     </div>
-  </section>
-
-  <!-- EDUCATION + AWARDS -->
-  <section id="edu">
-    <div class="sec-header reveal">
-      <div class="sec-tag">05 — Background</div>
-      <h2 class="sec-title">Education &amp; <span>Awards</span></h2>
-    </div>
-    <div class="edu-awards-grid">
-      <div class="glass-panel reveal reveal-d1">
-        <div class="panel-title">// education</div>
-        <div class="edu-degree">B.E. Automobile Engineering</div>
-        <div class="edu-school">PSG College of Technology</div>
-        <div class="edu-detail">Coimbatore, India</div>
-        <div class="edu-detail">Aug 2017 – May 2021</div>
-        <div class="edu-gpa">🎓 CGPA: 9.14 / 10</div>
+    <div class="sg R d3">
+      <div class="sg-name"><div class="sg-ico">💻</div>Programming & Query</div>
+      <div class="chips">
+        <span class="chip cv">Python</span>
+        <span class="chip cv">SQL (Advanced)</span>
+        <span class="chip cv">PySpark API</span>
+        <span class="chip cv">Shell / Bash</span>
+        <span class="chip cv">Spark SQL</span>
       </div>
-      <div class="glass-panel reveal reveal-d2">
-        <div class="panel-title">// recognition</div>
-        <div class="award-item">
-          <span class="award-icon">🏆</span>
-          <div class="award-info">
-            <div class="award-name-txt">Service &amp; Commitment Award</div>
-            <div class="award-meta">TCS · 2024</div>
+    </div>
+    <div class="sg R d1">
+      <div class="sg-name"><div class="sg-ico">🔄</div>ETL, Orchestration & Streaming</div>
+      <div class="chips">
+        <span class="chip cg">Azure Data Factory</span>
+        <span class="chip cg">Apache Airflow</span>
+        <span class="chip cg">Pentaho PDI</span>
+        <span class="chip cg">IBM DataStage</span>
+        <span class="chip cg">Kafka (Integration)</span>
+        <span class="chip cg">Event Hubs</span>
+        <span class="chip cg">CDC Patterns</span>
+      </div>
+    </div>
+    <div class="sg R d2">
+      <div class="sg-name"><div class="sg-ico">📐</div>Data Modeling & Architecture</div>
+      <div class="chips">
+        <span class="chip ce">Medallion Architecture</span>
+        <span class="chip ce">Star Schema</span>
+        <span class="chip ce">Snowflake Schema</span>
+        <span class="chip ce">SCDs (Type 1/2)</span>
+        <span class="chip ce">Data Vault 2.0</span>
+        <span class="chip ce">Dimensional Modeling</span>
+      </div>
+    </div>
+    <div class="sg R d3">
+      <div class="sg-name"><div class="sg-ico">🔭</div>Observability, DevOps & Governance</div>
+      <div class="chips">
+        <span class="chip ck">Azure Monitor</span>
+        <span class="chip ck">Log Analytics</span>
+        <span class="chip ck">Databricks Metrics API</span>
+        <span class="chip ck">Git / GitHub Actions</span>
+        <span class="chip ck">Bitbucket Pipelines</span>
+        <span class="chip ck">Data Quality (DLT Expectations)</span>
+        <span class="chip ck">Power BI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medallion Architecture Visual -->
+  <div class="medallion-wrap R">
+    <div class="med-title">// Medallion Architecture Expertise</div>
+    <div class="med-flow">
+      <div class="flow-node">Raw Sources</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">Auto Loader</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">ADF Pipelines</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">Databricks Workflows</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">Power BI / Consumers</div>
+    </div>
+    <div style="height:20px;"></div>
+    <div class="med-layers">
+      <div class="med-layer ml-bronze">
+        <div class="ml-badge mlb-bronze">🥉 Bronze</div>
+        <div class="ml-layer-name">Raw Ingestion Layer</div>
+        <div class="ml-desc">Exact copy of source data. Schema-on-read, full audit trail, immutable storage.</div>
+        <ul class="ml-items">
+          <li>Auto Loader with schema inference &amp; evolution</li>
+          <li>CDC ingestion via Debezium/Event Hubs</li>
+          <li>Structured Streaming checkpoints</li>
+          <li>ADLS Gen2 raw zone partitioning</li>
+          <li>Source metadata tagging</li>
+        </ul>
+      </div>
+      <div class="med-layer ml-silver">
+        <div class="ml-badge mlb-silver">🥈 Silver</div>
+        <div class="ml-layer-name">Cleansed &amp; Conformed Layer</div>
+        <div class="ml-desc">Validated, deduplicated, type-cast, and business-rule-applied data.</div>
+        <ul class="ml-items">
+          <li>DLT Expectations for quality enforcement</li>
+          <li>SCD Type 1/2 merge logic (MERGE INTO)</li>
+          <li>Schema enforcement &amp; evolution handling</li>
+          <li>Z-ordering &amp; Liquid Clustering for performance</li>
+          <li>OPTIMIZE + VACUUM scheduling</li>
+        </ul>
+      </div>
+      <div class="med-layer ml-gold">
+        <div class="ml-badge mlb-gold">🥇 Gold</div>
+        <div class="ml-layer-name">Curated Analytics Layer</div>
+        <div class="ml-desc">Business-ready aggregated datasets for BI tools and ML feature stores.</div>
+        <ul class="ml-items">
+          <li>Star/Snowflake schema dimensional models</li>
+          <li>Pre-aggregated KPI fact tables</li>
+          <li>Power BI DirectQuery &amp; Import optimized</li>
+          <li>Unity Catalog data contracts &amp; RBAC</li>
+          <li>Delta Sharing for cross-team consumption</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     EXPERIENCE
+════════════════════════════════════════ -->
+<section id="experience">
+  <div class="sec-eyebrow R">02 — Career</div>
+  <h2 class="sec-h R">Work <em>Experience</em></h2>
+
+  <div class="tl">
+
+    <!-- PwC -->
+    <div class="tl-entry R d1">
+      <div class="tl-node"></div>
+      <div class="tl-card">
+        <div class="tl-top">
+          <div>
+            <div class="tl-co">PwC India · Senior Associate</div>
+            <div class="tl-role">Senior Data Engineer</div>
           </div>
+          <div class="tl-period">May 2025 — Present</div>
         </div>
-        <div class="award-item">
-          <span class="award-icon">⭐</span>
-          <div class="award-info">
-            <div class="award-name-txt">Special Initiative Award</div>
-            <div class="award-meta">TCS · 2023</div>
-          </div>
+        <ul class="tl-bullets">
+          <li>Spearheading <strong>end-to-end migration of legacy ETL ecosystems</strong> — IBM DataStage and on-prem SQL workflows — to <strong>Azure Databricks Lakehouse</strong>, modernizing data infrastructure and enabling scalable, cloud-native analytics across enterprise clients.</li>
+          <li>Designed and implemented <strong>medallion architecture (Bronze / Silver / Gold)</strong> using Delta Lake, Auto Loader for incremental ingestion, and DLT Expectations for automated data quality enforcement at each layer.</li>
+          <li>Built <strong>parameterized, reusable PySpark ETL pipelines</strong> applying advanced optimization techniques — predicate pushdown, broadcast joins, adaptive query execution (AQE), and partition pruning — for large enterprise datasets.</li>
+          <li>Architected <strong>ADF pipelines with dynamic content and parameterized linked services</strong> to orchestrate multi-layer Databricks notebook dependencies with error handling, retry logic, and SLA alerting.</li>
+          <li>Configured <strong>Unity Catalog for centralized data governance</strong> — managing metastore hierarchy, external locations, access controls (RBAC), lineage graphs, and data tagging policies across business domains.</li>
+          <li>Established <strong>CI/CD pipelines using Databricks Asset Bundles and GitHub Actions</strong> for automated deployment of notebooks, jobs, and configurations across dev/QA/prod environments.</li>
+          <li>Collaborated with BI teams to expose curated Gold-layer tables to <strong>Power BI via DirectQuery</strong>, enabling real-time KPI dashboards with row-level security (RLS) applied at catalog level.</li>
+        </ul>
+        <div class="impact-row">
+          <span class="impact-pill">↑ Migration velocity 3×</span>
+          <span class="impact-pill">↓ Pipeline failures via DLT quality gates</span>
+          <span class="impact-pill">↑ Governance coverage 100% via Unity Catalog</span>
         </div>
-        <div class="award-item">
-          <span class="award-icon">🚀</span>
-          <div class="award-info">
-            <div class="award-name-txt">Elevate Wings Award</div>
-            <div class="award-meta">TCS · 2022</div>
-          </div>
+        <div class="tl-stack">
+          <span class="stk">Databricks</span><span class="stk">PySpark</span><span class="stk">Delta Lake</span>
+          <span class="stk">Auto Loader</span><span class="stk">DLT</span><span class="stk">ADF</span>
+          <span class="stk">Unity Catalog</span><span class="stk">GitHub Actions</span><span class="stk">Power BI</span>
+          <span class="stk">IBM DataStage</span>
         </div>
       </div>
     </div>
-  </section>
 
-</main>
+    <!-- TCS Systems Engineer -->
+    <div class="tl-entry R d2">
+      <div class="tl-node"></div>
+      <div class="tl-card">
+        <div class="tl-top">
+          <div>
+            <div class="tl-co">Tata Consultancy Services · Systems Engineer</div>
+            <div class="tl-role">Data Engineer</div>
+          </div>
+          <div class="tl-period">Nov 2021 — May 2025</div>
+        </div>
+        <ul class="tl-bullets">
+          <li>Designed and delivered <strong>cloud-native data pipelines on Azure Data Factory + Databricks</strong> for an airline data management platform, processing millions of transaction records daily across structured, semi-structured (JSON, XML), and API sources.</li>
+          <li>Led <strong>full ETL migration from on-prem Pentaho PDI to ADF + Databricks</strong>; rebuilt 200+ workflows using parameterized ADF templates, reusable Databricks notebooks, and modular PySpark transformation libraries.</li>
+          <li>Applied <strong>Spark performance tuning</strong> — Z-ordering on high-cardinality columns, file compaction via OPTIMIZE, caching of frequently-joined dimension tables, and cluster autoscaling policies — achieving <strong>40% improvement</strong> in transformation runtime.</li>
+          <li>Implemented <strong>SCD Type 2 merge logic</strong> using Delta Lake's MERGE INTO to maintain complete historical records for airline booking and customer entities.</li>
+          <li>Built <strong>end-to-end data observability</strong> stack using Azure Monitor, Log Analytics workspaces, and Databricks Metrics API — covering pipeline freshness SLAs, row count anomaly detection, schema drift alerts, and cost per-job tracking.</li>
+          <li>Designed <strong>Star Schema dimensional models</strong> for business-facing Gold layer tables, creating pre-computed aggregates for operational KPIs surfaced in Power BI dashboards with DirectQuery integration.</li>
+          <li>Performed <strong>schema evolution handling</strong> using Delta Lake's schema merging capabilities and Auto Loader `inferSchema` mode to safely absorb upstream source changes without pipeline downtime.</li>
+        </ul>
+        <div class="impact-row">
+          <span class="impact-pill">↑ 40% faster transformations via Spark tuning</span>
+          <span class="impact-pill">↓ Pipeline downtime via schema evolution handling</span>
+          <span class="impact-pill">✓ 200+ pipelines successfully migrated</span>
+        </div>
+        <div class="tl-stack">
+          <span class="stk">Azure Data Factory</span><span class="stk">Databricks</span><span class="stk">PySpark</span>
+          <span class="stk">Delta Lake</span><span class="stk">Z-ordering</span><span class="stk">SCD Type 2</span>
+          <span class="stk">Azure Monitor</span><span class="stk">Log Analytics</span><span class="stk">Power BI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TCS ASE -->
+    <div class="tl-entry R d3">
+      <div class="tl-node"></div>
+      <div class="tl-card">
+        <div class="tl-top">
+          <div>
+            <div class="tl-co">Tata Consultancy Services · Asst. Systems Engineer</div>
+            <div class="tl-role">Data Engineer (Junior)</div>
+          </div>
+          <div class="tl-period">May 2021 — Nov 2021</div>
+        </div>
+        <ul class="tl-bullets">
+          <li>Designed and implemented <strong>ETL solutions using Pentaho Data Integration (PDI)</strong> — building transformations, jobs, and parameterized workflows integrating data from MSSQL, flat files, and REST APIs into data marts and warehouses.</li>
+          <li>Performed <strong>data validation, reconciliation, and quality assessments</strong> ensuring data integrity across complex multi-source datasets including cross-system row count checks, null audits, and business-rule validations.</li>
+          <li>Executed <strong>SQL Server database administration</strong> — query optimization via execution plan analysis, index tuning, statistics updates, and stored procedure refactoring — reducing report execution times significantly.</li>
+          <li>Contributed to <strong>dimensional model design</strong> for initial data mart implementations, applying star schema principles and defining grain for fact tables aligned to business reporting needs.</li>
+        </ul>
+        <div class="tl-stack">
+          <span class="stk">Pentaho PDI</span><span class="stk">MSSQL</span><span class="stk">SQL Server</span>
+          <span class="stk">Python</span><span class="stk">Data Modeling</span><span class="stk">ETL Design</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PROJECTS
+════════════════════════════════════════ -->
+<section id="projects">
+  <div class="sec-eyebrow R">03 — Delivered</div>
+  <h2 class="sec-h R">Key <em>Projects</em></h2>
+
+  <div class="proj-grid">
+
+    <div class="proj-card R d1">
+      <div class="proj-stripe"></div>
+      <div class="proj-inner">
+        <div class="proj-header">
+          <div class="proj-name">Data Platform Modernization — Airline Travel Domain</div>
+          <div class="proj-badge-row">
+            <span class="proj-badge pb-blue">TCS · 3+ yrs</span>
+            <span class="proj-badge pb-gold">Enterprise Scale</span>
+          </div>
+        </div>
+        <div class="proj-tech"><span>Stack:</span> Azure Databricks · ADF · PySpark · Delta Lake · Auto Loader · DLT · Unity Catalog · Azure Monitor · Power BI · Microsoft Fabric</div>
+        <p class="proj-summary">Led full multi-phase modernization of a legacy on-prem data warehouse and ETL estate (Pentaho + DataStage) into a production-grade Azure Databricks Lakehouse, implementing medallion architecture end-to-end with enterprise governance and observability.</p>
+        <div class="proj-impacts">
+          <div class="pi"><span class="pi-dot">▸</span><span>Migrated <strong>200+ on-prem ETL pipelines</strong> (Pentaho + DataStage) to ADF + Databricks, eliminating legacy dependencies and standardizing ingestion across CSV, JSON, XML, and API sources.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Implemented <strong>Auto Loader with cloudFiles format</strong> for low-latency incremental ingestion from ADLS Gen2, with schema inference, schema evolution, and checkpoint-based exactly-once semantics.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Applied <strong>Spark tuning</strong> — AQE, Z-ordering, OPTIMIZE scheduling, broadcast join hints, and partition coalescing — improving transformation runtime by <strong>40%</strong>.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Integrated <strong>Unity Catalog</strong> with fine-grained RBAC, column-level masking, row-level filters, and lineage graphs for end-to-end data governance.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Built <strong>data observability</strong> layer monitoring freshness SLAs, volume anomalies, schema drift, and per-job compute costs via Azure Monitor + Log Analytics dashboards.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Modeled <strong>Gold-layer Star/Snowflake schemas</strong> for Power BI DirectQuery, exposing domain-specific KPIs with row-level security applied at the Unity Catalog level.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-card R d2">
+      <div class="proj-stripe"></div>
+      <div class="proj-inner">
+        <div class="proj-header">
+          <div class="proj-name">Databricks Accelerator Frameworks — PwC Multi-client</div>
+          <div class="proj-badge-row">
+            <span class="proj-badge pb-blue">PwC · Ongoing</span>
+            <span class="proj-badge pb-gold">Reusable IP</span>
+          </div>
+        </div>
+        <div class="proj-tech"><span>Stack:</span> Databricks · PySpark · Delta Live Tables · ADF · Unity Catalog · GitHub Actions · Databricks Asset Bundles</div>
+        <p class="proj-summary">Built reusable, client-agnostic Databricks accelerator IP for rapid onboarding of enterprise clients migrating from Informatica, DataStage, and SSIS — enabling consistent, governed Lakehouse patterns across multiple simultaneous engagements.</p>
+        <div class="proj-impacts">
+          <div class="pi"><span class="pi-dot">▸</span><span>Developed <strong>DLT pipeline templates</strong> with built-in data quality expectations (quarantine + fail modes), lineage tracking, and auto-retry logic — deployable in under 2 hours per new client domain.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Designed <strong>generic ingestion framework</strong> supporting flat files, JDBC sources, REST APIs, and CDC streams into Delta Bronze tables with configurable schema inference and audit columns.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Tuned PySpark jobs using cluster policies (spot instance pools, autoscaling), photon engine enablement, and shuffle partition optimization — reducing <strong>compute cost per run by 30%</strong>.</span></div>
+          <div class="pi"><span class="pi-dot">▸</span><span>Established <strong>CI/CD with Databricks Asset Bundles + GitHub Actions</strong> — automated lint, unit testing, integration testing, and multi-environment promotion (dev → QA → prod) with approval gates.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ARCHITECTURE DEEP DIVE
+════════════════════════════════════════ -->
+<section id="architecture">
+  <div class="sec-eyebrow R">04 — Deep Dive</div>
+  <h2 class="sec-h R">Engineering <em>Patterns</em></h2>
+
+  <div class="arch-grid">
+    <div class="arch-card R d1">
+      <span class="arch-icon">🔁</span>
+      <div class="arch-name">Change Data Capture (CDC)</div>
+      <div class="arch-desc">Implemented <strong>CDC ingestion patterns</strong> using Debezium connectors and Azure Event Hubs to capture row-level INSERT/UPDATE/DELETE events from MSSQL and Oracle sources. Applied <strong>MERGE INTO Delta</strong> with deduplication logic to maintain accurate Silver-layer state with full audit history.</div>
+      <span class="arch-badge">Event-Driven Ingestion</span>
+    </div>
+    <div class="arch-card R d2">
+      <span class="arch-icon">📏</span>
+      <div class="arch-name">Data Quality & Contracts</div>
+      <div class="arch-desc">Enforced <strong>data contracts at pipeline boundaries</strong> using DLT Expectations for schema validation, null checks, uniqueness, and referential integrity. Implemented quarantine tables for failed records with lineage tracking — enabling SLA-driven quality reporting to stakeholders with <strong>zero silent failures</strong>.</div>
+      <span class="arch-badge">DLT Expectations · Quarantine</span>
+    </div>
+    <div class="arch-card R d3">
+      <span class="arch-icon">⚙️</span>
+      <div class="arch-name">Spark Performance Engineering</div>
+      <div class="arch-desc">Proficient in <strong>Spark optimization at cluster and query level</strong>: Z-ordering and Liquid Clustering for file skipping, AQE for dynamic partition coalescing, broadcast thresholds for small dimension joins, Photon engine enablement, and Delta OPTIMIZE scheduling for file compaction — achieving consistent <strong>40%+ runtime reductions</strong>.</div>
+      <span class="arch-badge">AQE · Z-order · Photon · Liquid Clustering</span>
+    </div>
+    <div class="arch-card R d4">
+      <span class="arch-icon">🏛️</span>
+      <div class="arch-name">Data Governance at Scale</div>
+      <div class="arch-desc">Designed <strong>Unity Catalog metastore hierarchy</strong> (catalog → schema → table) aligned to business domains. Implemented column-level masking for PII fields, row-level security filters, external location policies, and <strong>data lineage graphs</strong> for end-to-end impact analysis across 50+ tables per domain.</div>
+      <span class="arch-badge">Unity Catalog · RBAC · Data Lineage</span>
+    </div>
+    <div class="arch-card R d1">
+      <span class="arch-icon">💸</span>
+      <div class="arch-name">Cost Optimization</div>
+      <div class="arch-desc">Reduced Databricks compute spend by <strong>30% per run</strong> via spot instance pool configuration, cluster autoscaling policies, job cluster vs all-purpose cluster separation, Photon engine for SQL workloads, and proactive VACUUM scheduling to reduce storage costs from Delta log accumulation.</div>
+      <span class="arch-badge">Spot Instances · Autoscaling · Photon</span>
+    </div>
+    <div class="arch-card R d2">
+      <span class="arch-icon">🔭</span>
+      <div class="arch-name">Pipeline Observability</div>
+      <div class="arch-desc">Built <strong>full observability stack</strong> covering freshness SLAs (max lag alerting), volume anomaly detection (rolling Z-score on row counts), schema drift notifications via Azure Monitor alerts, per-job cost attribution to business domains, and <strong>Databricks Metrics API</strong> dashboards surfaced in Log Analytics.</div>
+      <span class="arch-badge">Azure Monitor · SLA Tracking · Anomaly Detection</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CERTS
+════════════════════════════════════════ -->
+<section id="certs">
+  <div class="sec-eyebrow R">05 — Credentials</div>
+  <h2 class="sec-h R">Certifi<em>cations</em></h2>
+  <div class="cert-grid">
+    <div class="cert-card R d1">
+      <div class="cert-glow"></div>
+      <span class="cert-icon">🏅</span>
+      <div class="cert-name">Azure Data Engineer Associate</div>
+      <div class="cert-issuer">Microsoft Certified</div>
+      <div class="cert-exam">Exam DP-203 · Active</div>
+      <a class="cert-link" href="#">↗ Verify on Microsoft Learn</a>
+    </div>
+    <div class="cert-card R d2">
+      <div class="cert-glow"></div>
+      <span class="cert-icon">📊</span>
+      <div class="cert-name">Power BI Data Analyst Associate</div>
+      <div class="cert-issuer">Microsoft Certified</div>
+      <div class="cert-exam">Exam PL-300 · Active</div>
+      <a class="cert-link" href="#">↗ Verify on Microsoft Learn</a>
+    </div>
+    <div class="cert-card R d3">
+      <div class="cert-glow"></div>
+      <span class="cert-icon">🗄️</span>
+      <div class="cert-name">Azure Database Administrator Associate</div>
+      <div class="cert-issuer">Microsoft Certified</div>
+      <div class="cert-exam">Exam DP-300 · Active</div>
+      <a class="cert-link" href="#">↗ Verify on Microsoft Learn</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     EDUCATION + AWARDS
+════════════════════════════════════════ -->
+<section id="edu">
+  <div class="sec-eyebrow R">06 — Background</div>
+  <h2 class="sec-h R">Education &amp; <em>Recognition</em></h2>
+  <div class="ea-grid">
+    <div class="ea-panel R d1">
+      <div class="panel-hdr">🎓 education</div>
+      <div class="edu-deg">B.E. Automobile Engineering</div>
+      <div class="edu-school">PSG College of Technology</div>
+      <div class="edu-detail">Coimbatore, Tamil Nadu, India</div>
+      <div class="edu-detail">Aug 2017 – May 2021</div>
+      <div class="edu-gpa">✨ CGPA: 9.14 / 10</div>
+    </div>
+    <div class="ea-panel R d2">
+      <div class="panel-hdr">🏆 recognition</div>
+      <div class="award">
+        <span class="award-ico">🏆</span>
+        <div>
+          <div class="award-name">Service &amp; Commitment Award</div>
+          <div class="award-sub">TCS · 2024 · Exceptional client delivery</div>
+        </div>
+      </div>
+      <div class="award">
+        <span class="award-ico">⭐</span>
+        <div>
+          <div class="award-name">Special Initiative Award</div>
+          <div class="award-sub">TCS · 2023 · Platform migration leadership</div>
+        </div>
+      </div>
+      <div class="award">
+        <span class="award-ico">🚀</span>
+        <div>
+          <div class="award-name">Elevate Wings Award</div>
+          <div class="award-sub">TCS · 2022 · Outstanding performance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /wrap -->
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">
-    <strong>Gokul Rengaraju</strong> · Senior Data Engineer · Chennai, India
+  <div>
+    <div class="footer-name">Gokul Rengaraju</div>
+    <div class="footer-sub">Senior Data Engineer · Azure Databricks Specialist · Chennai, India · Nov 2025</div>
   </div>
-  <div class="footer-links">
-    <a class="footer-btn btn-ghost" href="mailto:gokulrengaraju2k@gmail.com">Contact</a>
-    <button class="footer-btn btn-solid" onclick="window.print()">⬇ Download PDF</button>
+  <div class="footer-ctas">
+    <a class="btn btn-outline" href="https://www.linkedin.com/in/gokul-r-6ab027191" target="_blank">LinkedIn</a>
+    <button class="btn btn-primary" onclick="window.print()">⬇ Download PDF</button>
   </div>
 </footer>
 
-<!-- ─── JAVASCRIPT ─────────────────────────────────────────────────── -->
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
 <script>
-/* ── Custom cursor ── */
-const dot = document.getElementById('cur-dot');
-const ring = document.getElementById('cur-ring');
+/* ── Cursor ── */
+const C = document.getElementById('C');
+const CR = document.getElementById('CR');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
-(function animRing(){ rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+document.addEventListener('mousemove', e=>{
+  mx=e.clientX; my=e.clientY;
+  C.style.left=mx+'px'; C.style.top=my+'px';
+});
+(function loop(){ rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+  CR.style.left=rx+'px'; CR.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.ni').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('link-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('link-hover'));
+});
+
+/* ── Progress bar ── */
+const prog = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const h = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (scrollY/h*100)+'%';
+},{passive:true});
+
+/* ── Pipeline Canvas ── */
+(function(){
+  const cv = document.getElementById('pipeline-canvas');
+  const ctx = cv.getContext('2d');
+  let W,H;
+  function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  // Data nodes flowing through a pipeline
+  const LANES = 6;
+  const nodes = [];
+  for(let i=0;i<60;i++){
+    nodes.push({
+      lane: Math.floor(Math.random()*LANES),
+      x: Math.random()*1600,
+      speed: .4+Math.random()*.8,
+      size: 2+Math.random()*3,
+      alpha: .1+Math.random()*.35,
+      color: ['#63b3ed','#4fd1c5','#f6c90e','#68d391'][Math.floor(Math.random()*4)]
+    });
+  }
+  const connections = [];
+  for(let i=0;i<30;i++){
+    connections.push({
+      x1:Math.random()*1600, y1:Math.random()*900,
+      x2:Math.random()*1600, y2:Math.random()*900,
+      alpha:0, grow:true, speed:0.004+Math.random()*.006
+    });
+  }
+
+  let t=0;
+  function draw(){
+    t+=.008;
+    ctx.clearRect(0,0,W,H);
+
+    // Grid
+    ctx.strokeStyle='rgba(99,179,237,0.04)';
+    ctx.lineWidth=1;
+    for(let x=0;x<W+60;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H+60;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    // Lane streams
+    for(let l=0;l<LANES;l++){
+      const y = H*(l+1)/(LANES+1);
+      const grd = ctx.createLinearGradient(0,0,W,0);
+      grd.addColorStop(0,'transparent');
+      grd.addColorStop(.3+.1*Math.sin(t+l),'rgba(99,179,237,0.07)');
+      grd.addColorStop(.7+.1*Math.cos(t*.7+l),'rgba(79,209,197,0.05)');
+      grd.addColorStop(1,'transparent');
+      ctx.strokeStyle=grd; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    }
+
+    // Moving data nodes
+    nodes.forEach(n=>{
+      const y = H*(n.lane+1)/(LANES+1)+Math.sin(t*.5+n.lane)*12;
+      n.x = (n.x+n.speed) % (W+20);
+      ctx.beginPath(); ctx.arc(n.x,y,n.size,0,Math.PI*2);
+      ctx.fillStyle = n.color.replace(')',`,${n.alpha})`).replace('rgb','rgba');
+      // fallback for hex
+      ctx.globalAlpha = n.alpha;
+      ctx.fillStyle = n.color;
+      ctx.fill();
+      ctx.globalAlpha=1;
+    });
+
+    // Connection lines
+    connections.forEach(c=>{
+      c.alpha += c.grow ? c.speed : -c.speed;
+      if(c.alpha>=.18){c.grow=false;}
+      if(c.alpha<=0){c.grow=true;c.x1=Math.random()*W;c.y1=Math.random()*H;c.x2=Math.random()*W;c.y2=Math.random()*H;}
+      ctx.globalAlpha=Math.max(0,c.alpha);
+      ctx.strokeStyle='rgba(99,179,237,1)';
+      ctx.lineWidth=.5;
+      ctx.beginPath();ctx.moveTo(c.x1,c.y1);ctx.lineTo(c.x2,c.y2);ctx.stroke();
+      ctx.globalAlpha=1;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
 /* ── Typewriter ── */
-const phrases = ['azure_data_engineer', 'databricks_specialist', 'pipeline_architect', 'lakehouse_engineer'];
-let pi=0, ci=0, deleting=false;
-const typedEl = document.getElementById('typed-text');
-function type(){
-  const phrase = phrases[pi];
-  if(!deleting){ typedEl.textContent=phrase.slice(0,++ci); if(ci===phrase.length){deleting=true;setTimeout(type,1800);return;} }
-  else { typedEl.textContent=phrase.slice(0,--ci); if(ci===0){deleting=false;pi=(pi+1)%phrases.length;} }
-  setTimeout(type, deleting?40:65);
-}
-setTimeout(type,1200);
+(function(){
+  const el = document.getElementById('typed-text');
+  const cur = document.getElementById('tcur');
+  const phrases=['azure_databricks_specialist','medallion_architect','pipeline_engineer','delta_lake_expert','data_platform_lead'];
+  let pi=0,ci=0,del=false;
+  cur.style.animation='blink 1s step-end infinite';
+  const style=document.createElement('style');
+  style.textContent='@keyframes blink{50%{opacity:0}}';
+  document.head.appendChild(style);
+  function tick(){
+    const p=phrases[pi];
+    if(!del){el.textContent=p.slice(0,++ci);if(ci===p.length){del=true;setTimeout(tick,1600);return;}}
+    else{el.textContent=p.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;}}
+    setTimeout(tick,del?35:60);
+  }
+  setTimeout(tick,1000);
+})();
 
-/* ── Scroll reveal ── */
-const revealObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
-},{threshold:0.08});
-document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+/* ── Scroll Reveal ── */
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:.07});
+document.querySelectorAll('.R').forEach(el=>ro.observe(el));
 
-/* ── Stat counters ── */
-function countUp(el){
-  const to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||0), suf=el.dataset.suffix||'';
-  let cur=0; const steps=55;
-  const iv=setInterval(()=>{
-    cur=Math.min(cur+to/steps, to);
-    el.textContent=(dec>0?cur.toFixed(dec):Math.floor(cur))+suf;
-    if(cur>=to) clearInterval(iv);
-  },28);
-}
-const statObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.querySelectorAll('[data-to]').forEach(countUp); statObs.unobserve(e.target); }});
-},{threshold:0.3});
-statObs.observe(document.getElementById('stats'));
+/* ── Counters ── */
+const co = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.querySelectorAll('[data-to]').forEach(el=>{
+      const to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||0), suf=el.dataset.suf||'';
+      let cur=0;const steps=60;
+      const iv=setInterval(()=>{
+        cur=Math.min(cur+to/steps,to);
+        el.textContent=(dec>0?cur.toFixed(dec):Math.floor(cur))+suf;
+        if(cur>=to)clearInterval(iv);
+      },22);
+    });
+    co.unobserve(e.target);
+  });
+},{threshold:.3});
+const ms=document.getElementById('metrics-strip');
+if(ms)co.observe(ms);
 
-/* ── Active nav ── */
-const navItems=document.querySelectorAll('.nav-item');
-const sections=document.querySelectorAll('section, #stats');
+/* ── Active Nav ── */
+const navItems=document.querySelectorAll('.ni');
+const sections=document.querySelectorAll('section[id]');
 function updateNav(){
   let cur='hero';
-  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-200) cur=s.id; });
-  navItems.forEach(n=>{
-    n.classList.toggle('active', n.dataset.section===cur);
-  });
+  sections.forEach(s=>{if(scrollY>=s.offsetTop-220)cur=s.id;});
+  navItems.forEach(n=>n.classList.toggle('on',n.dataset.s===cur));
 }
 window.addEventListener('scroll',updateNav,{passive:true});
-navItems.forEach(n=>{ n.addEventListener('click',()=>{ document.getElementById(n.dataset.section)?.scrollIntoView({behavior:'smooth'}); }); });
+navItems.forEach(n=>n.addEventListener('click',()=>{
+  const t=document.getElementById(n.dataset.s);
+  if(t)t.scrollIntoView({behavior:'smooth'});
+}));
 
-/* ── Aurora mouse parallax ── */
-const blobs=document.querySelectorAll('.aurora-blob');
+/* ── Aurora parallax on aurora blobs (repurposed as subtle bg shift) ── */
 document.addEventListener('mousemove',e=>{
-  const xf=(e.clientX/window.innerWidth-0.5)*20;
-  const yf=(e.clientY/window.innerHeight-0.5)*20;
-  blobs.forEach((b,i)=>{
-    const d=(i+1)*0.4;
-    b.style.transform=`translate(${xf*d}px,${yf*d}px)`;
-  });
+  const xf=(e.clientX/innerWidth-.5)*16;
+  const yf=(e.clientY/innerHeight-.5)*16;
+  document.getElementById('pipeline-canvas').style.transform=`translate(${xf*.15}px,${yf*.15}px)`;
 },{passive:true});
 </script>
 </body>
